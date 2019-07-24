@@ -1,14 +1,5 @@
 require 'rails_helper'
 
-# テストケース
-# ・署名が不正の場合：ステータス４００が返る
-# ・署名が正しく、テキストメッセージを受信した場合：ステータス２００を返す、受信したメッセージをそのまま返信する
-# ・署名が正しく、スタンプメッセージを受信した場合：ステータス２００を返す、特定のメッセージを返信する
-# ・署名が正しく、画像・動画メッセージを受信した場合：ステータス２００を返す、特定のメッセージを返信し、S3に保存する
-# ・署名が正しく、友達登録をされた場合：ステータス２００を返す、挨拶メッセージを送信する
-# ・署名が正しく、ブロックをされた場合：ステータス２００を返す、Userデータを削除する
-# ・署名が正しく、ブロックが解除された場合：ステータス２００を返す、挨拶メッセージを送信する
-
 RSpec.describe MessageController, type: :request do
   # describe: テスト対象
   describe 'POST /callback' do
@@ -28,17 +19,30 @@ RSpec.describe MessageController, type: :request do
         expect(response.status).to eq(400)
       end
        
-      it 'is received text message' do
+      it 'is received weapon name message' do
+        User.create(:name => 'Test User' , :line_id => 'U01c7d4ac06b42fb8c59c2a1256604ccc' , :status => '00' , :del_flg => false)
         headers = {
           "Content-Type" => "application/json;charset=UTF-8",
-          "X-Line-Signature" => "84N/Gua/DbFpe318+XEBFxvdrW6c3C1wJEX5s8XQXcU="
+          "X-Line-Signature" => "7lo54FqoBYq2tBkThpTeoqu65l8EEKgk3biTE1OOYDk="
         }
-        post callback_path, :params => IO.read(Rails.root.join("spec", "support", "text_message.json" )) , :headers => headers
+        post callback_path, :params => IO.read(Rails.root.join("spec", "support", "weapon_name_message.json" )) , :headers => headers
+        
+        expect(response.status).to eq(200)
+      end
+      
+      it 'is received weapon roulette message' do
+        User.create(:name => 'Test User' , :line_id => 'U01c7d4ac06b42fb8c59c2a1256604ccc' , :status => '00' , :del_flg => false)
+        headers = {
+          "Content-Type" => "application/json;charset=UTF-8",
+          "X-Line-Signature" => "AxXHd6BNQGwTYow2daHyfJwohPt+pMB31lR/NMdCc7o="
+        }
+        post callback_path, :params => IO.read(Rails.root.join("spec", "support", "weapon_roulette_message.json" )) , :headers => headers
         
         expect(response.status).to eq(200)
       end
       
       it 'is received sticker message' do
+        User.create(:name => 'Test User' , :line_id => 'U01c7d4ac06b42fb8c59c2a1256604ccc' , :status => '00' , :del_flg => false)
         headers = {
           "Content-Type" => "application/json;charset=UTF-8",
           "X-Line-Signature" => "e666e189Ayt6LX/eW/VHIeBzQNQLdnyBafHLJYl3Xhs="
@@ -49,6 +53,7 @@ RSpec.describe MessageController, type: :request do
       end
         
       it 'is received image/video message' do
+        User.create(:name => 'Test User' , :line_id => 'U01c7d4ac06b42fb8c59c2a1256604ccc' , :status => '00' , :del_flg => false)
         headers = {
           "Content-Type" => "application/json;charset=UTF-8",
           "X-Line-Signature" => "l83WLZ3CZyHTDc3W43s7g4hrVz5rr8CLH0OKGTwC/ts="

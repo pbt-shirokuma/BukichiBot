@@ -27,39 +27,52 @@ class MessageController < ApplicationController
             render :status => 400 , :json => { error: "invalid_request" , error_description: "some parameters missed or invalid" }
             return
         end
+        
+        # 受信メッセージ内容を取得
         events = client.parse_events_from(body)
         events.each do |event|
             
+            # 送信元ユーザーIDを取得
             userId = event['source']['userId']
+            # ユーザーのステータスを確認
+            sendUser = User.find_by_line_id(userId)
             
+            # 返信用メッセージ配列の初期化
+            messages = []
+            
+            # Event Typeによりアクションを決定
             case event
             
             # follow Event
             when Line::Bot::Event::Follow
                 
-                followUser = User.find_by_line_id(userId)
-                if followUser.nil?
+                if sendUser.nil?
                     # User regist
-                    followUser = User.new
-                    followUser.name = 'New User'
-                    followUser.line_id = userId
-                    followUser.status = '00'
+                    sendUser = User.new
+                    sendUser.name = 'New User'
+                    sendUser.line_id = userId
+                    sendUser.status = '00'
                     
                     # follow message send
                     message = {
                         type: 'text',
-                        text: 'フォローありがとう！'
+                        text: 'フォローありがとうでし！\n' +
+                            'ブキの名前を言ってくれればブキの情報を教えるでし。\n' +
+                            'ランダムにブキを選んで欲しいときはメニューから「ブキルーレット」を選ぶでし。'
                     }
+                    messages.push(message)
+                    
                 else
-                    followUser.del_flg = false
+                    sendUser.del_flg = false
                     # follow message send
                     message = {
                         type: 'text',
-                        text: 'ブロ解ありがとう！'
+                        text: 'いらっしゃいでし！ブキの事ならなんでも聞くでし！'
                     }
+                    messages.push(message)
                 end
                 
-                unless followUser.save
+                unless sendUser.save
                     # error handle
                 end
                 
@@ -68,15 +81,14 @@ class MessageController < ApplicationController
             # Unfollow Event
             when Line::Bot::Event::Unfollow
                 
-                unfollowUser = User.find_by_line_id(userId)
-                unfollowUser.del_flg = true
-                unless unfollowUser.save
+                sendUser.del_flg = true
+                unless sendUser.save
                     # error handle
                 end
                 
             # Messgae Event
             when Line::Bot::Event::Message
-                
+            
                 # Message regist
                 receiptMessage = Message.new
                 receiptMessage.message_id = event.message['id']
@@ -86,14 +98,105 @@ class MessageController < ApplicationController
                 # Text Message
                 when Line::Bot::Event::MessageType::Text
                     
+                    # Webhook接続確認でない場合
+                    unless event["replyToken"] == '00000000000000000000000000000000'
+                        
+                        case sendUser.status
+                        when '00' # 通常
+                        
+                            case event.message['text']
+                            when '#weapon_roulette'
+                                
+                                message = {
+                                    type: 'text',
+                                    text: 'ぼくがランダムにブキを選ぶでし！'
+                                }
+                                messages.push(message)
+                                
+                                selectted_weapon = nil
+                                main_hash = nil
+                                File.open("public/main.json") do |j|
+                                    main_hash = JSON.load(j)
+                                    selectted_weapon = main_hash.keys[rand(main_hash.length)]
+                                end  
+                                
+                                message = {
+                                    type: 'text',
+                                    text: main_hash[selectted_weapon]["localization"]["ja"] + 'を使うでし！'
+                                }
+                                messages.push(message)
+                                
+                                # Pending
+                                # sendUser = User.find_by_line_id(userId)
+                                # sendUser.status = '10' #ブキルーレット開始
+                                
+                                
+                            else
+        
+                                # メッセージの内容でブキを検索
+                                query_weapon = MainWeapon.find_by_name(event.message['text'])
+                            
+                                unless query_weapon.nil?
+                                    # 検索結果が存在する場合
+                                        
+                                    # メインJSONの読み込み
+                                    weapon_data = nil
+                                    sub_data = nil
+                                    special_data = nil
+                                    
+                                    File.open("public/main.json") do |j|
+                                        main_hash = JSON.load(j)
+                                        weapon_data = main_hash[query_weapon.json_key]
+                                    end
+                                    
+                                    File.open("public/sub.json") do |j|
+                                        sub_hash = JSON.load(j)
+                                        sub_data = sub_hash[weapon_data['sub_key']]
+                                    end
+                                    
+                                    File.open("public/special.json") do |j|
+                                        special_hash = JSON.load(j)
+                                        special_data = special_hash[weapon_data['special_key']]
+                                    end  
+                                    
+                                    message_text = weapon_data['localization']['ja'] + 'は、\n' +
+                                        'サブウェポンが' + sub_data['localization']['ja'] + 'で、\n' +
+                                        'スペシャルは' + special_data['localization']['ja'] + 'でし。\n' +
+                                        'スペシャルに必要なポイントは' + weapon_data['special_points'].to_s + 'でし。'
+                                    
+                                    message = {
+                                        type: 'text',
+                                        text: message_text
+                                    }
+                                    messages.push(message)
+                                    
+                                    # ブキチの説明をメッセージで送る
+                                    # Pending
+                                    
+                                else
+                                    # 検索結果が存在しない場合
+                                    message = {
+                                        type: 'text',
+                                        text: 'ブキのこと以外は興味ないでし'
+                                    }
+                                    messages.push(message)
+                                end
+                            end
+                            
+                        when '10' # ブキルーレット開始
+                            
+                            # Pending
+                            # 連続でブキを選択する機能とする
+                            # やめる場合はステータスを"00"に戻す
+                        
+                        end
+                        
+                    end
+                    # 返信
+                    client.reply_message(event['replyToken'], messages)
+                    
+                    # メッセージ履歴の登録
                     receiptMessage.request = event.message['text']
-                    
-                    message = {
-                        type: 'text',
-                        text: event.message['text'] + '...?'
-                    }
-                    client.reply_message(event['replyToken'], message)
-                    
                     receiptMessage.response = message
                     unless receiptMessage.save
                         # error handle
@@ -105,37 +208,32 @@ class MessageController < ApplicationController
                         JSON.parse('{ "packageId":' + event.message['packageId'] + ',' + '"sickerId":' + event.message['stickerId'] + '}')
                     
                     message = {
-                        type: 'text',
-                        text: 'いいスタンプだね！'
+                        type: 'sticker',
+                        packageId: '11537',
+                        stickerId: '52002744'
                     }
                     
+                    # 返信
                     client.reply_message(event['replyToken'], message)
+                    
+                    # メッセージ内容を登録
                     receiptMessage.response = message
                     unless receiptMessage.save
                         # error handle
                     end
                     
-                # Image , Video Message
-                when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
-                    response = client.get_message_content(event.message['id'])
-                    
-                    bucket_name = 'pbt-line-chatbot-tmp-strage'
-                    key = userId+DateTime.now.strftime('%Y%m%d%H%M%S')
-                    s3_client = Aws::S3::Resource.new(
-                      region: 'ap-northeast-1',
-                      credentials: Aws::Credentials.new(
-                        ENV['ACCESS_KEY_ID'],
-                        ENV['SECRET_ACCESS_KEY']
-                      )
-                    )
-                    s3_client.bucket(bucket_name).object(key).put(body: response.body)
+                # その他のメッセージ
+                else
                     
                     message = {
                         type: 'text',
-                        text: '面白いね！'
+                        text: '興味ないでし'
                     }
                     
+                    # 返信
                     client.reply_message(event['replyToken'], message)
+                    
+                    # メッセージ内容を登録
                     receiptMessage.response = message
                     unless receiptMessage.save
                         # error handle

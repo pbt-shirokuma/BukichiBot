@@ -185,19 +185,19 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_hash
-  aws-sdk-rails
-  aws-sdk-s3
-  bootsnap
-  json
-  line-bot-api
-  listen
-  mysql2
-  pg
-  puma
+  active_hash (= 2.2.1)
+  aws-sdk-rails (= 2.1.0)
+  aws-sdk-s3 (= 1.45.0)
+  bootsnap (= 1.4.4)
+  json (= 2.1.0)
+  line-bot-api (= 1.11.0)
+  listen (= 3.1.5)
+  mysql2 (= 0.5.2)
+  pg (= 1.1.4)
+  puma (= 4.0.0)
   rails (= 5.2.3)
-  rspec-rails
-  uglifier
+  rspec-rails (= 3.8.2)
+  uglifier (= 4.1.20)
   web-console (~> 2.0)
 
 BUNDLED WITH
