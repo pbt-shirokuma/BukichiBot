@@ -1,9 +1,9 @@
 class MessageController < ApplicationController
     
-    require 'line/bot'
-    require 'json'
-    require 'aws-sdk-s3'
-    require 'date'
+    require "line/bot"
+    require "json"
+    require "aws-sdk-s3"
+    require "date"
     
     protect_from_forgery :except => [:callback]
     
@@ -22,7 +22,7 @@ class MessageController < ApplicationController
         hash = OpenSSL::HMAC::digest(OpenSSL::Digest::SHA256.new, ENV["LINE_CHANNEL_SECRET"], body)
         signature = Base64.strict_encode64(hash)
         puts signature
-        req_signature = request.env['HTTP_X_LINE_SIGNATURE']
+        req_signature = request.env["HTTP_X_LINE_SIGNATURE"]
         unless signature.eql?(req_signature)
             render :status => 400 , :json => { error: "invalid_request" , error_description: "some parameters missed or invalid" }
             return
@@ -33,7 +33,7 @@ class MessageController < ApplicationController
         events.each do |event|
             
             # 送信元ユーザーIDを取得
-            userId = event['source']['userId']
+            userId = event["source"]["userId"]
             # ユーザーのステータスを確認
             sendUser = User.find_by_line_id(userId)
             
@@ -49,16 +49,16 @@ class MessageController < ApplicationController
                 if sendUser.nil?
                     # User regist
                     sendUser = User.new
-                    sendUser.name = 'New User'
+                    sendUser.name = "New User"
                     sendUser.line_id = userId
-                    sendUser.status = '00'
+                    sendUser.status = "00"
                     
                     # follow message send
                     message = {
-                        type: 'text',
-                        text: 'フォローありがとうでし！\n' +
-                            'ブキの名前を言ってくれればブキの情報を教えるでし。\n' +
-                            'ランダムにブキを選んで欲しいときはメニューから「ブキルーレット」を選ぶでし。'
+                        type: "text",
+                        text: "フォローありがとうでし！\n" +
+                            "ブキの名前を言ってくれればブキの情報を教えるでし。\n" +
+                            "ランダムにブキを選んで欲しいときはメニューから「ブキルーレット」を選ぶでし。"
                     }
                     messages.push(message)
                     
@@ -66,8 +66,8 @@ class MessageController < ApplicationController
                     sendUser.del_flg = false
                     # follow message send
                     message = {
-                        type: 'text',
-                        text: 'いらっしゃいでし！ブキの事ならなんでも聞くでし！'
+                        type: "text",
+                        text: "いらっしゃいでし！ブキの事ならなんでも聞くでし！"
                     }
                     messages.push(message)
                 end
@@ -76,7 +76,7 @@ class MessageController < ApplicationController
                     # error handle
                 end
                 
-                client.reply_message(event['replyToken'], message)
+                client.reply_message(event["replyToken"], message)
             
             # Unfollow Event
             when Line::Bot::Event::Unfollow
@@ -91,50 +91,56 @@ class MessageController < ApplicationController
             
                 # Message regist
                 receiptMessage = Message.new
-                receiptMessage.message_id = event.message['id']
-                receiptMessage.message_type = event.message['type']
+                receiptMessage.message_id = event.message["id"]
+                receiptMessage.message_type = event.message["type"]
             
                 case event.type
                 # Text Message
                 when Line::Bot::Event::MessageType::Text
                     
                     # Webhook接続確認でない場合
-                    unless event["replyToken"] == '00000000000000000000000000000000'
+                    unless event["replyToken"] == "00000000000000000000000000000000"
                         
                         case sendUser.status
-                        when '00' # 通常
+                        when "00" # 通常
                         
-                            case event.message['text']
-                            when '#weapon_roulette'
+                            case event.message["text"]
+                            when "#weapon_roulette"
                                 
-                                message = {
-                                    type: 'text',
-                                    text: 'ぼくがランダムにブキを選ぶでし！'
-                                }
-                                messages.push(message)
+
                                 
                                 selectted_weapon = nil
                                 main_hash = nil
                                 File.open("public/main.json") do |j|
                                     main_hash = JSON.load(j)
-                                    selectted_weapon = main_hash.keys[rand(main_hash.length)]
-                                end  
+                                    selectted_weapon = main_hash[main_hash.keys[rand(main_hash.length)]]
+                                end
                                 
+                                # ブキ画像のURL設定 
+                                img_url = "https://" + request.host_with_port + "/main_weapon_img/" + selectted_weapon["key"] + '.png'
                                 message = {
-                                    type: 'text',
-                                    text: main_hash[selectted_weapon]["localization"]["ja"] + 'を使うでし！'
+                                    type: "image",
+                                    originalContentUrl: img_url ,
+                                    previewImageUrl: img_url
+                                }
+                                messages.push(message)
+                                
+                                # ブキ名の設定
+                                message = {
+                                    type: "text",
+                                    text: selectted_weapon["localization"]["ja"] + "を使うでし！"
                                 }
                                 messages.push(message)
                                 
                                 # Pending
                                 # sendUser = User.find_by_line_id(userId)
-                                # sendUser.status = '10' #ブキルーレット開始
+                                # sendUser.status = "10" #ブキルーレット開始
                                 
                                 
                             else
         
                                 # メッセージの内容でブキを検索
-                                query_weapon = MainWeapon.find_by_name(event.message['text'])
+                                query_weapon = MainWeapon.find_by_name(event.message["text"])
                             
                                 unless query_weapon.nil?
                                     # 検索結果が存在する場合
@@ -151,21 +157,21 @@ class MessageController < ApplicationController
                                     
                                     File.open("public/sub.json") do |j|
                                         sub_hash = JSON.load(j)
-                                        sub_data = sub_hash[weapon_data['sub_key']]
+                                        sub_data = sub_hash[weapon_data["sub_key"]]
                                     end
                                     
                                     File.open("public/special.json") do |j|
                                         special_hash = JSON.load(j)
-                                        special_data = special_hash[weapon_data['special_key']]
+                                        special_data = special_hash[weapon_data["special_key"]]
                                     end  
                                     
-                                    message_text = weapon_data['localization']['ja'] + 'は、\n' +
-                                        'サブウェポンが' + sub_data['localization']['ja'] + 'で、\n' +
-                                        'スペシャルは' + special_data['localization']['ja'] + 'でし。\n' +
-                                        'スペシャルに必要なポイントは' + weapon_data['special_points'].to_s + 'でし。'
+                                    message_text = weapon_data["localization"]["ja"] + "は、\n" +
+                                        "サブウェポンが" + sub_data["localization"]["ja"] + "で、\n" +
+                                        "スペシャルは" + special_data["localization"]["ja"] + "でし。\n" +
+                                        "スペシャルに必要なポイントは" + weapon_data["special_points"].to_s + "でし。"
                                     
                                     message = {
-                                        type: 'text',
+                                        type: "text",
                                         text: message_text
                                     }
                                     messages.push(message)
@@ -176,14 +182,14 @@ class MessageController < ApplicationController
                                 else
                                     # 検索結果が存在しない場合
                                     message = {
-                                        type: 'text',
-                                        text: 'ブキのこと以外は興味ないでし'
+                                        type: "text",
+                                        text: "ブキのこと以外は興味ないでし"
                                     }
                                     messages.push(message)
                                 end
                             end
                             
-                        when '10' # ブキルーレット開始
+                        when "10" # ブキルーレット開始
                             
                             # Pending
                             # 連続でブキを選択する機能とする
@@ -193,11 +199,11 @@ class MessageController < ApplicationController
                         
                     end
                     # 返信
-                    client.reply_message(event['replyToken'], messages)
+                    client.reply_message(event["replyToken"], messages)
                     
                     # メッセージ履歴の登録
-                    receiptMessage.request = event.message['text']
-                    receiptMessage.response = message
+                    receiptMessage.request = event.message["text"]
+                    receiptMessage.response = messages
                     unless receiptMessage.save
                         # error handle
                     end
@@ -205,16 +211,16 @@ class MessageController < ApplicationController
                 when Line::Bot::Event::MessageType::Sticker
                     
                     receiptMessage.request = 
-                        JSON.parse('{ "packageId":' + event.message['packageId'] + ',' + '"sickerId":' + event.message['stickerId'] + '}')
+                        JSON.parse('{ "packageId":' + event.message["packageId"] + "," + '"sickerId":' + event.message["stickerId"] + "}")
                     
                     message = {
-                        type: 'sticker',
-                        packageId: '11537',
-                        stickerId: '52002744'
+                        type: "sticker",
+                        packageId: "11537",
+                        stickerId: "52002744"
                     }
                     
                     # 返信
-                    client.reply_message(event['replyToken'], message)
+                    client.reply_message(event["replyToken"], message)
                     
                     # メッセージ内容を登録
                     receiptMessage.response = message
@@ -226,12 +232,12 @@ class MessageController < ApplicationController
                 else
                     
                     message = {
-                        type: 'text',
-                        text: '興味ないでし'
+                        type: "text",
+                        text: "興味ないでし"
                     }
                     
                     # 返信
-                    client.reply_message(event['replyToken'], message)
+                    client.reply_message(event["replyToken"], message)
                     
                     # メッセージ内容を登録
                     receiptMessage.response = message
