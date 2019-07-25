@@ -1,0 +1,13 @@
+<p id="notice"><%= notice %></p>
+
+<table>
+    <tr><th>フェス名</th><td><%= @fest.fest_name %></td></tr>
+    <tr><th>フェスステータス</th><td><%= Fest::FEST_STATUS.key(@fest.fest_status) %></td></tr>
+    <tr><th>選択肢A</th><td><%= @fest.selection_a %></td></tr>
+    <tr><th>選択肢B</th><td><%= @fest.selection_b %></td></tr>
+    <tr><th>フェス結果</th><td><%= @fest.fest_result %></td></tr>
+    <tr><th>作成日時</th><td><%= @fest.created_at %></td></tr>
+    <tr><th>更新日時</th><td><%= @fest.updated_at %></td></tr>
+</table>
+<%= link_to 'Edit', edit_fest_path(@fest) %> |
+<%= link_to 'Back', fests_path %>

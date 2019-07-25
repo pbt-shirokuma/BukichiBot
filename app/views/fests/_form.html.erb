@@ -1,0 +1,26 @@
+<%= form_with(model: fest, local: true) do |form| %>
+  <% if fest.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(fest.errors.count, "error") %> prohibited this fest from being saved:</h2>
+
+      <ul>
+      <% fest.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <table>
+    <tr><th>フェス名</th><td><%= form.text_field :fest_name %></td></tr>
+    <tr><th>フェスステータス</th><td><%= form.select :fest_status , Fest::FEST_STATUS %></td></tr>
+    <tr><th>選択肢A</th><td><%= form.text_field :selection_a %></td></tr>
+    <tr><th>選択肢B</th><td><%= form.text_field :selection_b %></td></tr>
+    <tr><th>フェス結果</th><td><%= form.text_field :fest_result %></td></tr>
+    <tr><th>作成日時</th><td><%= @fest.created_at %></td></tr>
+    <tr><th>更新日時</th><td><%= @fest.updated_at %></td></tr>
+  </table>
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

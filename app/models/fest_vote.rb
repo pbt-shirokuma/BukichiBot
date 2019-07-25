@@ -1,23 +1,17 @@
-class User < ApplicationRecord
-
+class FestVote < ApplicationRecord
+    
     # Relation
-    has_many :messages
-    has_many :fest_votes
+    belongs_to :Fest
+    belongs_to :User
     
-    # status 定数
-    STATUS = {
-        :normal => "00",
-        :fest => "10"
-    }
-      
-    # talk_status 定数
-    TALK_STATUS = {
-        :normal => "00",
-        :fest_vote => "10",
-        :fest_record => "11"
+    # validation
+    validates :fest_id, presence: true
+    validates :user_id, presence: true
+    validates :selection, inclusion: { in: ["a","b"] }
+    validates :game_count, numericality: true
+    validates :win_count, numericality: true
+    
 
-    }
-    
     # アクセサ
     def created_at
         unless read_attribute(:created_at).nil?
@@ -29,4 +23,5 @@ class User < ApplicationRecord
             read_attribute(:updated_at).strftime("%Y/%m/%d %H:%M:%S") 
         end
     end
+    
 end

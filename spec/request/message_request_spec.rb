@@ -23,7 +23,7 @@ RSpec.describe MessageController, type: :request do
         User.create(:name => 'Test User' , :line_id => 'U01c7d4ac06b42fb8c59c2a1256604ccc' , :status => '00' , :del_flg => false)
         headers = {
           "Content-Type" => "application/json;charset=UTF-8",
-          "X-Line-Signature" => "7lo54FqoBYq2tBkThpTeoqu65l8EEKgk3biTE1OOYDk="
+          "X-Line-Signature" => "lJYCsaxP6KxCMH9LJT6vU/emb+X1kpgKKVt8L03MYeU="
         }
         post callback_path, :params => IO.read(Rails.root.join("spec", "support", "weapon_name_message.json" )) , :headers => headers
         
@@ -34,7 +34,7 @@ RSpec.describe MessageController, type: :request do
         User.create(:name => 'Test User' , :line_id => 'U01c7d4ac06b42fb8c59c2a1256604ccc' , :status => '00' , :del_flg => false)
         headers = {
           "Content-Type" => "application/json;charset=UTF-8",
-          "X-Line-Signature" => "AxXHd6BNQGwTYow2daHyfJwohPt+pMB31lR/NMdCc7o="
+          "X-Line-Signature" => "VIa/ybpsGXgg0boWL5Ix0/la3x/oOXtfSYnBq4h/CQQ="
         }
         post callback_path, :params => IO.read(Rails.root.join("spec", "support", "weapon_roulette_message.json" )) , :headers => headers
         
@@ -45,7 +45,7 @@ RSpec.describe MessageController, type: :request do
         User.create(:name => 'Test User' , :line_id => 'U01c7d4ac06b42fb8c59c2a1256604ccc' , :status => '00' , :del_flg => false)
         headers = {
           "Content-Type" => "application/json;charset=UTF-8",
-          "X-Line-Signature" => "e666e189Ayt6LX/eW/VHIeBzQNQLdnyBafHLJYl3Xhs="
+          "X-Line-Signature" => "vrucXT2fn176VYTE+cIkvVyCZmx6zZkbDle7KFUXCOo="
         }
         post callback_path, :params => IO.read(Rails.root.join("spec", "support", "sticker_message.json" )) , :headers => headers
         
@@ -56,7 +56,7 @@ RSpec.describe MessageController, type: :request do
         User.create(:name => 'Test User' , :line_id => 'U01c7d4ac06b42fb8c59c2a1256604ccc' , :status => '00' , :del_flg => false)
         headers = {
           "Content-Type" => "application/json;charset=UTF-8",
-          "X-Line-Signature" => "l83WLZ3CZyHTDc3W43s7g4hrVz5rr8CLH0OKGTwC/ts="
+          "X-Line-Signature" => "mULImoFBGN19sfDmPmTyByEybECxvbirS6nCjzdNW5I="
         }
         post callback_path, :params => IO.read(Rails.root.join("spec", "support", "image_message.json" )) , :headers => headers
         
@@ -68,7 +68,7 @@ RSpec.describe MessageController, type: :request do
       it 'is new follower add' do
         headers = {
           "Content-Type" => "application/json;charset=UTF-8",
-          "X-Line-Signature" => "AQLg3h9hKidVQFNr5rr1oJPiF5fac7Jj9UNyWohU2dM="
+          "X-Line-Signature" => "dik+l1ChiePTF7EDKwRMX5SLPJ6P6eo6BHISRico6mE="
         }
         post callback_path, :params => IO.read(Rails.root.join("spec", "support", "follow_event.json" )) , :headers => headers
         
@@ -79,7 +79,7 @@ RSpec.describe MessageController, type: :request do
         User.create(:name => 'Test User' , :line_id => 'U01c7d4ac06b42fb8c59c2a1256604ccc' , :status => '00' , :del_flg => true)
         headers = {
           "Content-Type" => "application/json;charset=UTF-8",
-          "X-Line-Signature" => "AQLg3h9hKidVQFNr5rr1oJPiF5fac7Jj9UNyWohU2dM="
+          "X-Line-Signature" => "dik+l1ChiePTF7EDKwRMX5SLPJ6P6eo6BHISRico6mE="
         }
         post callback_path, :params => IO.read(Rails.root.join("spec", "support", "follow_event.json" )) , :headers => headers
         expect(response.status).to eq(200)
@@ -91,7 +91,7 @@ RSpec.describe MessageController, type: :request do
         User.create(:name => 'Test User' , :line_id => 'U01c7d4ac06b42fb8c59c2a1256604ccc' , :status => '00' , :del_flg => false)
         headers = {
           "Content-Type" => "application/json;charset=UTF-8",
-          "X-Line-Signature" => "JPiOQpKDC1YgOUlA/rfTND5wwL2m/YQ4uOvpODgXOFw="
+          "X-Line-Signature" => "1xyMgax4oMF5gHwU1nxxmMtrF3oLMCuJXl+Q3dbtQCw="
         }
         post callback_path, :params => IO.read(Rails.root.join("spec", "support", "unfollow_event.json" )) , :headers => headers
         expect(response.status).to eq(200)
