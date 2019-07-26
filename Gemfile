@@ -18,6 +18,8 @@ gem 'uglifier' , "4.1.20"
 group :test do
   gem 'rspec-rails' , "3.8.2"
   gem 'mysql2' , "0.5.2"
+  gem 'factory_bot_rails'
+  gem 'database_cleaner'
 end
 
 group :development do

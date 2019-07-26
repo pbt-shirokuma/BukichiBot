@@ -1,0 +1,1 @@
+{"events": [{"type":"postback","replyToken":"b60d432864f44d079f6d8efe86cf404b","source":{"userId":"U01c7d4ac06b42fb8c59c2a1256604ccc","type":"user"},"timestamp":1513669370317,"postback":{"data":"step=1&fest_vote_id=1&result=win","params":{"datetime":"2017-12-25T01:00"}}}]}

@@ -1,8 +1,8 @@
 class FestVote < ApplicationRecord
     
     # Relation
-    belongs_to :Fest
-    belongs_to :User
+    belongs_to :fest , optional: true
+    belongs_to :user , optional: true
     
     # validation
     validates :fest_id, presence: true

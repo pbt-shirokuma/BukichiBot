@@ -260,11 +260,13 @@ class MessageController < ApplicationController
                         @sendUser.save!
                         
                         # フェス投票データを取得
-                        fest_vote = FestVote.where("(fest_id = ?) OR (user_id = ?)", @fest.id,@sendUser.id).limit(1)[0]
+                        fest_vote = FestVote.where(["fest_id = ? and user_id = ?",@fest.id,@sendUser.id]).limit(1)[0]
+                        puts fest_vote
+                        puts @fest.id.to_s + "/"+@sendUser.id.to_s 
                         
                         actions = []
-                        actions.push(set_postback_action_object("Win!","step=1&fest_vote_id="+fest_vote.id.to_s+"&result=win","Win!"))
-                        actions.push(set_postback_action_object("Lose...","step=1&fest_vote_id="+fest_vote.id.to_s+"&result=lose","Lose..."))
+                        actions.push(set_postback_action_object("Win!","step=1&fest_vote_id="+fest_vote.id.to_s+"&result=1","Win!"))
+                        actions.push(set_postback_action_object("Lose...","step=1&fest_vote_id="+fest_vote.id.to_s+"&result=2","Lose..."))
                         messages.push(
                             set_confirm_template(
                                 "試合結果の記録",
@@ -321,7 +323,7 @@ class MessageController < ApplicationController
                     else
                         # 検索結果が存在しない場合
                         
-                        joke = Joke.find_by_message(event.message["text"]) || "ブキのこと以外は興味ないでし。"
+                        joke = Joke.find_by_message(event.message["text"]) || { :message => "other" , :response => "ブキのこと以外は興味ないでし。" }
                         
                         messages.push({
                             type: "text",
@@ -387,21 +389,21 @@ class MessageController < ApplicationController
         receiptMessage.message_id = event["replyToken"]
         receiptMessage.message_type = event["type"] 
         receiptMessage.request = event["postback"]
+        receiptMessage.user_id = @sendUser.id
         
         postback_data = event["postback"]["data"].split("&")
         
         # ユーザーのトークステータスによる分岐
         case @sendUser.talk_status
         when User::TALK_STATUS[:fest_vote] # フェス投票
-            
-            step = postback_data[0].slice!("step=")
+            step = postback_data[0].delete("step=")
             
             # PostbackメッセージのStepによる分岐
             case step
             
             # 投票先の選択（再選択）
             when "0"
-                fest_id = postback_data[1].slice!("fest_id=")
+                fest_id = postback_data[1].delete!("fest_id=")
                 fest = Fest.find(fest_id.to_i)
                 
                 # ボタンメッセージを投げる
@@ -411,12 +413,12 @@ class MessageController < ApplicationController
                     "やめる")
                 actions.push(set_postback_action_object(
                     fest.selection_a,
-                    "step=1&"+postback_data[1]+"&selection=a",
+                    "step=1&fest_id="+postback_data[1]+"&selection=a",
                     fest.selection_a + "に投票する！")
                 )
                 actions.push(set_postback_action_object(
                     fest.selection_b,
-                    "step=1&"++postback_data[1]++"&selection=b",
+                    "step=1&fest_id="+postback_data[1]+"&selection=b",
                     fest.selection_b + "に投票する！")
                 )
                 messages.push(
@@ -431,8 +433,8 @@ class MessageController < ApplicationController
                 )
             when "1"
                 # 投票内容の取得
-                fest_id = postback_data[1].slice!("fest_id=")
-                selection = postback_data[2].slice!("selection=")
+                fest_id = postback_data[1].delete!("fest_id=")
+                selection = postback_data[2].delete!("selection=")
                 
                 fest = Fest.find(fest_id.to_i)
                 if selection == "a"
@@ -443,8 +445,8 @@ class MessageController < ApplicationController
                 
                 # 確認メッセージを投げる
                 actions = []
-                actions.push(set_postback_action_object("オッケー!","step=2&"+postback_data[1]+"&"+postback_data[2],"オッケー!"))
-                actions.push(set_postback_action_object("ちがうよ！","step=0&"++postback_data[1],"ちがうよ！"))
+                actions.push(set_postback_action_object("オッケー!","step=2&fest_id="+postback_data[1]+"&selection="+postback_data[2],"オッケー!"))
+                actions.push(set_postback_action_object("ちがうよ！","step=0&fest_id="+postback_data[1],"ちがうよ！"))
                 messages.push(
                     set_confirm_template(
                         "フェス投票の確認",
@@ -455,9 +457,9 @@ class MessageController < ApplicationController
             when "2"
                 # 投票結果を登録する
                 FestVote.create!({
-                    :fest_id => postback_data[1].slice!("fest_id=").to_i,
+                    :fest_id => postback_data[1].delete!("fest_id=").to_i,
                     :user_id => @sendUser.id,
-                    :selection => postback_data[2].slice!("selection=")
+                    :selection => postback_data[2].delete!("selection=")
                 })
                 
                 messages.push({
@@ -465,15 +467,15 @@ class MessageController < ApplicationController
                     text: "投票したでし！"
                 })
                 
-                @sendUser.status = User:STATUS[:fest]
-                @sendUser.talk_status = User:TALK_STATUS[:normal]
+                @sendUser.status = User::STATUS[:fest]
+                @sendUser.talk_status = User::TALK_STATUS[:normal]
                 @sendUser.save!
 
             end
             
         when User::TALK_STATUS[:fest_record] # フェス戦績の記録
             
-            step = postback_data[0].slice!("step=")
+            step = postback_data[0].delete!("step=")
             
             # PostbackメッセージのStepによる分岐
             case step
@@ -482,8 +484,8 @@ class MessageController < ApplicationController
             when "0"
 
                 actions = []
-                actions.push(set_postback_action_object("Win!","step=1&"+postback_data[1]+"&result=win","Win!"))
-                actions.push(set_postback_action_object("Lose...","step=1&"+postback_data[1]+"&result=lose","Lose..."))
+                actions.push(set_postback_action_object("Win!","step=1&"+postback_data[1]+"&result=1","Win!"))
+                actions.push(set_postback_action_object("Lose...","step=1&"+postback_data[1]+"&result=2","Lose..."))
                 messages.push(
                     set_confirm_template(
                         "試合結果の記録",
@@ -495,16 +497,21 @@ class MessageController < ApplicationController
             # 登録内容の確認
             when "1"
 
-                result = postback_data[2].slice!("result")
-                
+                result = postback_data[2].delete!("result=")
+                selection = nil
+                if result == "1"
+                    selection = "Win"
+                else
+                    selection = "Lose"
+                end
                 # 確認メッセージを投げる
                 actions = []
-                actions.push(set_postback_action_object("オッケー！","step=2&"+postback_data[1]+"&"+postback_data[2],"オッケー！"))
+                actions.push(set_postback_action_object("オッケー！","step=2&"+postback_data[1]+"&result="+postback_data[2],"オッケー！"))
                 actions.push(set_postback_action_object("ちがうよ！","step=0&"+postback_data[1],"ちがうよ！"))
                 messages.push(
                     set_confirm_template(
                         "試合結果の確認",
-                        "試合結果は「" + result + "」で間違いないでしか？",
+                        "試合結果は「" + selection + "」で間違いないでしか？",
                         actions
                     )
                 )
@@ -512,28 +519,25 @@ class MessageController < ApplicationController
             # 試合結果の登録
             when "2"
                 # 試合結果を登録する
-                result = postback_data[2].slice!("result")
-                fest_vote = FestVote.find(postback_data[1].slice!("fest_vote_id=").to_i)
+                result = postback_data[2].delete!("result=")
+                fest_vote = FestVote.find(postback_data[1].delete!("fest_vote_id=").to_i)
                 fest_vote.game_count = fest_vote.game_count + 1
-                if result == "win"
+                if result == "1"
                     fest_vote.win_count = fest_vote.win_count + 1
                 end
                 if fest_vote.win_count == 0
                     fest_vote.win_rate = 0
                 else
-                    fest_vote.win_rate = (fest_vote.win_count / fest_vote.game_count * 100).round(2)
+                    fest_vote.win_rate = (fest_vote.win_count.to_f / fest_vote.game_count.to_f * 100).round(2)
                 end
-                unless fest_vote.save
-                    # error hundle
-                end
+                fest_vote.save!
                 
                 messages.push({
                     type: "text",
                     text: "登録したでし！"
                 })
                 
-                @sendUser.status = User:STATUS[:fest]
-                @sendUser.talk_status = User:TALK_STATUS[:normal]
+                @sendUser.talk_status = User::TALK_STATUS[:normal]
                 @sendUser.save!
                 
             end
