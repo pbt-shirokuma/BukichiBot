@@ -31,7 +31,7 @@ RSpec.describe FestsController, type: :controller do
   end
   
   # 集計
-  describe 'PATCH /fest/:id/totalize' do
+  describe 'POST /fest/:id/totalize' do
     context 'totalize' do
       it 'is fest totalize' do
         @user1 = create(:user, { id: 1 , status: "10" , line_id: "AAAAA"})
@@ -57,7 +57,7 @@ RSpec.describe FestsController, type: :controller do
         @fest_vote8 = create(:fest_vote , { id: 8 , fest_id: 1 , user_id: 8, selection: "b" , win_rate: 50.00 })
         @fest_vote9 = create(:fest_vote , { id: 9 , fest_id: 1 , user_id: 9, selection: "b" , win_rate: 50.00 })
         @fest_vote10 = create(:fest_vote , { id: 10 , fest_id: 1 , user_id: 10, selection: "b" , win_rate: 50.00 })
-        patch :totalize , params: { id: 1 }
+        post :totalize , params: { id: 1 }
         
         expect(@fest.reload.fest_status).to eq("30")
         expect(response.status).to eq(200)

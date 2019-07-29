@@ -11,3 +11,4 @@
 </table>
 <%= link_to 'Edit', edit_fest_path(@fest) %> |
 <%= link_to 'Back', fests_path %>
+<%= button_to '集計', :action => 'totalize' , :method => 'post' , :params => { id: @fest.id } %>
