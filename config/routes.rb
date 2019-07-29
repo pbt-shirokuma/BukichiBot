@@ -11,5 +11,6 @@ Rails.application.routes.draw do
   patch '/fests' => 'fests#create'
   post '/fests/:id' => 'fests#update'
   patch '/fests/:id' => 'fests#update'
+  patch '/fests/:id/totalize' => 'fests#totalize'
   
 end

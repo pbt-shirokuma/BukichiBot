@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_25_042735) do
+ActiveRecord::Schema.define(version: 2019_07_26_120228) do
 
   create_table "fest_votes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "fest_id", null: false
@@ -35,6 +35,9 @@ ActiveRecord::Schema.define(version: 2019_07_25_042735) do
     t.string "fest_result"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
+    t.datetime "term_from"
+    t.datetime "term_to"
     t.index ["created_at"], name: "index_fests_on_created_at"
   end
 
