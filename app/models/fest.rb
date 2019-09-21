@@ -2,6 +2,7 @@ class Fest < ApplicationRecord
     
     # Relation
     has_many :fest_votes
+    belongs_to :user
     
     # fest_status 定数
     FEST_STATUS = {

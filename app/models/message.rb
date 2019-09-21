@@ -1,7 +1,6 @@
 class Message < ApplicationRecord
 
     # Relation
-    belongs_to :user
 
     # 定数
     RESPONSE_FOLLOW_MESSAGE = {

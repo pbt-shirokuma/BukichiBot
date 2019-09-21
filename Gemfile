@@ -25,6 +25,10 @@ end
 group :development do
   gem 'web-console', '~> 2.0'
   gem 'mysql2' , "0.5.2"
+  gem 'pry-rails' 
+  gem 'pry-doc' 
+  gem 'pry-byebug' 
+  gem 'pry-stack_explorer'
 end
 
 group :production do

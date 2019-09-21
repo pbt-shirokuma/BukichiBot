@@ -24,7 +24,7 @@ class FestsController < ApplicationController
   # POST /fests
   def create
     @fest = Fest.new(fest_params)
-
+    @fest.user = @current_user
     if @fest.save
       redirect_to @fest, notice: 'Fest was successfully created.'
     else

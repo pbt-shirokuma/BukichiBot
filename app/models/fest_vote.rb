@@ -11,7 +11,6 @@ class FestVote < ApplicationRecord
     validates :game_count, numericality: true
     validates :win_count, numericality: true
     
-
     # アクセサ
     def created_at
         unless read_attribute(:created_at).nil?

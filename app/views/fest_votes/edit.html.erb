@@ -1,0 +1,8 @@
+<%= @fest_vote.fest.fest_name %><br />
+投票：<%= @fest_vote.selection %><br />
+試合数：<%= @fest_vote.game_count %><br />
+勝ち数：<%= @fest_vote.win_count %><br />
+勝率：<%= (@fest_vote.win_rate * 100.0 ).to_s + "%" %><br />
+
+<%= button_to 'かち!' , update_fest_vote_path(id: @fest_vote.id) , method: :post, params: {result: 'win'} %>
+<%= button_to 'まけ!' , update_fest_vote_path(id: @fest_vote.id) , method: :post, params: {result: 'lose'} %>

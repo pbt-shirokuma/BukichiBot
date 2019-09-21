@@ -21,18 +21,20 @@
     <th>詳細</th>
     <th>編集</th>
     </tr>
-    <% @fests.each do |fest| %>
-      <tr>
-        <td><%= fest.fest_name %></td>
-        <td><%= Fest::FEST_STATUS.key(fest.fest_status) %></td>
-        <td><%= fest.selection_a %></td>
-        <td><%= fest.selection_b %></td>
-        <td><%= fest.fest_result %></td>
-        <td><%= fest.created_at %></td>
-        <td><%= fest.updated_at %></td>
-        <td><%= link_to 'Show', fest %></td>
-        <td><%= link_to 'Edit', edit_fest_path(fest) %></td>
-      </tr>
+    <% if @fests.present? %>
+      <% @fests.each do |fest| %>
+        <tr>
+          <td><%= fest.fest_name %></td>
+          <td><%= Fest::FEST_STATUS.key(fest.fest_status) %></td>
+          <td><%= fest.selection_a %></td>
+          <td><%= fest.selection_b %></td>
+          <td><%= fest.fest_result %></td>
+          <td><%= fest.created_at %></td>
+          <td><%= fest.updated_at %></td>
+          <td><%= link_to 'Show', fest %></td>
+          <td><%= link_to 'Edit', edit_fest_path(fest) if fest.user == @current_user%></td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>
@@ -40,3 +42,9 @@
 <br>
 
 <%= link_to 'New Fest', new_fest_path %>
+
+
+<div>
+  <%= link_to '戦績を記録する！', edit_fest_vote_path(id: @current_user.fest_votes.first.id) %>
+  
+</div>

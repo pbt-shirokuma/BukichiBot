@@ -1,14 +1,21 @@
 <p id="notice"><%= notice %></p>
 
+<p><%= @fest.fest_name %></p>
+<p><%= Fest::FEST_STATUS.key(@fest.fest_status) %></p>
+
 <table>
-    <tr><th>フェス名</th><td><%= @fest.fest_name %></td></tr>
-    <tr><th>フェスステータス</th><td><%= Fest::FEST_STATUS.key(@fest.fest_status) %></td></tr>
-    <tr><th>選択肢A</th><td><%= @fest.selection_a %></td></tr>
-    <tr><th>選択肢B</th><td><%= @fest.selection_b %></td></tr>
-    <tr><th>フェス結果</th><td><%= @fest.fest_result %></td></tr>
-    <tr><th>作成日時</th><td><%= @fest.created_at %></td></tr>
-    <tr><th>更新日時</th><td><%= @fest.updated_at %></td></tr>
+    <tr><th>選択肢A</th><th>選択肢B</th></tr>
+    <tr><td><%= @fest.selection_a %></td><td><%= @fest.selection_b %></td></tr>
+    <% if @fest.fest_result.present? %>
+    <tr><td><%= @fest.fest_result = "a" ? "WIN!" : "LOSE..." %></td><td><%= @fest.fest_result = "b" ? "WIN!" : "LOSE..."%></td></tr>
+    <% elsif !@current_user.joined_active_fest? && @fest.fest_status == Fest::FEST_STATUS[:open] %>
+    <tr>
+        <td><%= button_to "投票する！", create_fest_vote_path(id: @fest.id), method: :post, params: { selection: "a" } %></td>
+        <td><%= button_to "投票する！", create_fest_vote_path(id: @fest.id), method: :post, params: { selection: "b" } %></td>
+    </tr>
+    <% end %>
 </table>
+
 <%= link_to 'Edit', edit_fest_path(@fest) %> |
 <%= link_to 'Back', fests_path %>
-<%= button_to '集計', :action => 'totalize' , :method => 'post' , :params => { id: @fest.id } %>
+<%= button_to '集計', :action => 'totalize' , :method => 'post' , :params => { id: @fest.id } if @fest.user == @current_user %>

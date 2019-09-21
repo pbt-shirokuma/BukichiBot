@@ -192,8 +192,8 @@ class MessageController < ApplicationController
                 when "フェスに投票する！"
                     
                     # 開催中のフェス情報を取得
-                    @fest = Fest.find_by_fest_status(Fest::FEST_STATUS[:open])
-                    if @fest.nil?
+                    @fest = Fest.where(fest_status: Fest::FEST_STATUS[:open])
+                    if @fest.exists?
                        messages.push({
                            type: "text",
                            text: "現在開催中のフェスはなかったでし。"
@@ -203,35 +203,45 @@ class MessageController < ApplicationController
                         if @sendUser.status == User::STATUS[:normal]
                             # フェスに未投票の場合
                             
-                            # トークステータスを「フェス投票」に設定
-                            @sendUser.talk_status = User::TALK_STATUS[:fest_vote]
-                            @sendUser.save!
-                            
-                            # ボタンメッセージを投げる
-                            actions = []
-                            defaultAction = set_message_action_object(
-                                "やめる",
-                                "やめる")
-                            actions.push(set_postback_action_object(
-                                @fest.selection_a,
-                                "step=1&fest_id="+@fest.id.to_s+"&selection=a",
-                                @fest.selection_a + "に投票する！")
-                            )
-                            actions.push(set_postback_action_object(
-                                @fest.selection_b,
-                                "step=1&fest_id="+@fest.id.to_s+"&selection=b",
-                                @fest.selection_b + "に投票する！")
-                            )
-                            messages.push(
-                                set_button_template(
-                                    @fest.fest_name + "投票",
-                                    @fest.fest_image,
-                                    @fest.fest_name,
-                                    "あなたは「"+@fest.selection_a+"」、「"+@fest.selection_b+"」どっち？",
-                                    defaultAction,
-                                    actions
+                            if @sendUser.talk_status == User::TALK_STATUS[:normal]
+                                @sendUser.talk_status = User::TALK_STATUS[:fest_select]
+                                @sendUser.save!
+                                
+                                # 開催中のフェスのリストを投げる
+                                
+                                
+                                
+                            elsif @sendUser.talk_status == User::TALK_STATUS[:fest_select]
+                                # トークステータスを「フェス投票」に設定
+                                @sendUser.talk_status = User::TALK_STATUS[:fest_vote]
+                                @sendUser.save!
+                                
+                                # ボタンメッセージを投げる
+                                actions = []
+                                defaultAction = set_message_action_object(
+                                    "やめる",
+                                    "やめる")
+                                actions.push(set_postback_action_object(
+                                    @fest.selection_a,
+                                    "step=1&fest_id="+@fest.id.to_s+"&selection=a",
+                                    @fest.selection_a + "に投票する！")
                                 )
-                            )
+                                actions.push(set_postback_action_object(
+                                    @fest.selection_b,
+                                    "step=1&fest_id="+@fest.id.to_s+"&selection=b",
+                                    @fest.selection_b + "に投票する！")
+                                )
+                                messages.push(
+                                    set_button_template(
+                                        @fest.fest_name + "投票",
+                                        @fest.fest_image,
+                                        @fest.fest_name,
+                                        "あなたは「"+@fest.selection_a+"」、「"+@fest.selection_b+"」どっち？",
+                                        defaultAction,
+                                        actions
+                                    )
+                                )
+                            end
                         else
                             # フェス参加中の場合
                             # ユーザーのチームを返す
@@ -395,6 +405,8 @@ class MessageController < ApplicationController
         
         # ユーザーのトークステータスによる分岐
         case @sendUser.talk_status
+        when User::TALK_STATUS[:fest_select] # フェス投票
+            # フェスの選択
         when User::TALK_STATUS[:fest_vote] # フェス投票
             step = postback_data[0].delete("step=")
             
