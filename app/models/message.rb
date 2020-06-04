@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: messages
+#
+#  id             :bigint           not null, primary key
+#  message_type   :string(255)
+#  reply_response :text(65535)
+#  request        :text(65535)
+#  response       :text(65535)
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  message_id     :string(255)
+#
+# Indexes
+#
+#  index_messages_on_user_id_and_created_at  (created_at)
+#
 class Message < ApplicationRecord
 
     # Relation

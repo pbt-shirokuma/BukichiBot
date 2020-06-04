@@ -1,14 +1,13 @@
 class FestsController < ApplicationController
-  before_action :set_fest, only: [:show, :edit, :update , :totalize]
-
+  before_action :set_fest, only: [:show, :edit, :update, :destroy, :open, :totalize]
+  before_action :set_fests, only: [:index]
+  
   # GET /fests
   def index
-    @fests = Fest.all
   end
 
-  # GET /fests/1
+  # GET /fests/:id
   def show
-    
   end
 
   # GET /fests/new
@@ -18,7 +17,6 @@ class FestsController < ApplicationController
 
   # GET /fests/1/edit
   def edit
-
   end
 
   # POST /fests
@@ -26,27 +24,35 @@ class FestsController < ApplicationController
     @fest = Fest.new(fest_params)
     @fest.user = @current_user
     if @fest.save
-      redirect_to @fest, notice: 'Fest was successfully created.'
+      redirect_to fests_path, notice: 'フェスを作成しました！「開催する」ボタンから開催できます。'
     else
-      render :new
+      render :new, notice: @fest.errors.full_messages
     end
   end
 
   # PATCH/PUT /fests/1
   def update
     if @fest.update(fest_params)
-      redirect_to @fest, notice: 'Fest was successfully updated.'
+      redirect_to fests_path, notice: 'フェスの設定を更新しました！'
+    else
+      render :edit, notice: @fest.errors.full_messages
+    end
+  end
+  
+  # POST /fests/1/open
+  def open
+    if @fest.update(fest_status: "open")
+      redirect_to fests_path, notice: 'フェスを開催しました！'
     else
       render :edit
     end
   end
 
-  # PATCH/PUT /fests/1/totalize
+  # POST /fests/1/totalize
   # 集計処理
   def totalize
-    
     # 集計中に更新する
-    @fest.fest_status = Fest::FEST_STATUS[:totalize]
+    @fest.fest_status = "totalize"
     unless @fest.save
       # 更新できなかった場合
       render :show
@@ -68,11 +74,11 @@ class FestsController < ApplicationController
     # トランザクションを開始する
     ActiveRecord::Base.transaction do
       team_a_win_rate = 
-        FestVote.where(["fest_id = ? and selection = 'a'",1])
+        @fest.fest_votes.where(selection: 'a')
           .average(:win_rate).to_f.round(2)
         
       team_b_win_rate = 
-        FestVote.where(["fest_id = ? and selection = 'b'",1])
+        @fest.fest_votes.where(selection: 'b')
           .average(:win_rate).to_f.round(2)  
       
       # 勝敗の記録
@@ -87,7 +93,7 @@ class FestsController < ApplicationController
         win_team = "引き分け"
       end
       
-      @fest.fest_status = Fest::FEST_STATUS[:close]
+      @fest.fest_status = "close"
       @fest.save!
       
       # ユーザーのステータスを「通常」に戻す
@@ -123,20 +129,36 @@ class FestsController < ApplicationController
       
     render :show
   end
+  
+  def destroy
+    if @fest.destroy
+      redirect_to fests_path, notice: "フェス「#{@fest.fest_name}」を削除しました。"
+    else
+      render :edit, notice: @fest.errors.full_messages
+    end
+  end
 
   private
+  
     # Use callbacks to share common setup or constraints between actions.
     def set_fest
-      @fest = Fest.find(params[:id])
+      @fest = Fest.includes(:fest_votes, :user).find(params[:id])
+    end
+    
+    def set_fests
+      records = Fest.includes(:fest_votes, :user).order(:updated_at).all
+      records = records.where(fest_status: params[:fest_statuses]) if params[:fest_statuses].present?
+      records = records.where(user: @current_user) if params[:mine].present? && params[:mine] == "true"
+      @fests = records
     end
 
     # Only allow a trusted parameter "white list" through.
     def fest_params
       case action_name
       when "create"
-        params.fetch(:fest, {}).permit(:fest_name , :fest_status , :selection_a , :selection_b)
+        params.fetch(:fest, {}).permit(:fest_name , :selection_a , :selection_b, :fest_image_file)
       when "update"
-        params.fetch(:fest, {}).permit(:fest_name , :fest_status , :selection_a , :selection_b , :fest_result)
+        params.fetch(:fest, {}).permit(:fest_name , :selection_a , :selection_b, :fest_image_file)
       end
     end
     

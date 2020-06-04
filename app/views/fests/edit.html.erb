@@ -1,6 +1,8 @@
-<h1>Editing Fest</h1>
-
-<%= render 'form', fest: @fest %>
-
-<%= link_to 'Show', @fest %> |
-<%= link_to 'Back', fests_path %>
+<div class="section" >
+  <div class="no-border-box">
+    <%= link_to '<< 一覧に戻る', fests_path  %>
+  </div>
+  
+  <div class="section-title">フェスを編集する！</div>
+  <%= render 'form', fest: @fest %>
+</div>

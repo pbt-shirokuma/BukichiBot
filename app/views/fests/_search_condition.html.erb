@@ -1,0 +1,49 @@
+<div class="search-conditions">
+  <div id="search-conditions-header">
+    <label class="display-toggle"> ▶︎絞り込み条件 </label>
+  </div>
+  <div id="search-conditions-body" class="box-margin">
+    <%= form_with url: fests_path, method: :get, local: true do |form| %>
+      <div class="box-margin">
+        <div><label>ステータスで絞り込む</label></div>
+        <div>
+          <%= form.collection_check_boxes :fest_statuses, Fest.fest_statuses_i18n, :first, :last, include_hidden: false do |bundler| %>
+            <label class="checkbox-label" >
+              <%= bundler.check_box checked: params[:fest_statuses]&.include?(bundler.value), class: "filled-in" %>
+              <span><%= bundler.text %></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+      <div class="box-margin">
+        <div><label>企画者で絞り込む</label></div>
+        <div>
+          <label class="checkbox-label" >
+            <%= form.check_box :mine, { checked: params[:mine]&.eql?("true"), class: "filled-in" }, true, false %>
+            <span>自分が企画したフェスのみ</span>
+          </label>
+        </div>
+      </div>
+      <div>
+        <%= form.submit "絞り込む", class: "btn" %>
+      </div>
+    <% end %>
+  </div>
+  <hr />
+</div>
+
+<script>
+  //高さ指定
+  $('#search-conditions-body').each(function(){
+      $(this).css("height",$(this).height()+"px");
+  });
+  //開閉要素を隠す
+  $('#search-conditions-body').hide();
+  //ボタン要素が押されたら
+  $('.display-toggle').click(function () {
+  	//現在の状況に合わせて開閉
+      $('#search-conditions-body').slideToggle('slow');
+      //現在の状況に合わせてクラスをつける
+      $(this).toggleClass('active');
+  });
+</script>

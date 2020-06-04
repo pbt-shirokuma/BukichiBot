@@ -1,1 +1,12 @@
-<div><%= button_to "logout", {controller: 'session', action: 'destroy'}, {method: :post} %></div>
+<nav>
+  <div class="nav-wrapper">
+    <%= link_to fests_path, class: "brand-logo center" do |link|%>
+      <span class="logo-text">Fesquid!(β)</span>
+    <% end %>
+    <% if session[:user_id].present? %>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><%= link_to "ログアウト", {controller: 'session', action: 'destroy'}, {method: :post} %></li>
+      </ul>
+    <% end %>
+  </div>
+</nav>

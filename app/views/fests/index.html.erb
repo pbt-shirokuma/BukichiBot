@@ -1,50 +1,29 @@
-<p id="notice"><%= notice %></p>
+<!-- 参加中のフェス -->
+<% joined_active_fest = @current_user.joined_active_fest %>
+<% if joined_active_fest.present? %>
+  <div class="section" >
+    <div class="section-title">参加中のフェス</div>
+    <div class="row" >
+      <%= render 'layouts/components/fest_card', fest: joined_active_fest %>
+    </div>
+    <div class="row">
+      <%= link_to '戦績を記録する', edit_fest_vote_path(@current_user.my_vote(joined_active_fest.id)), { class: "waves-effect waves-light btn-large" } %>
+    </div>
+  </div>
+<% end %>
 
-<h1>Fests</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-    <th>フェス名</th>
-    <th>フェスステータス</th>
-    <th>選択肢A</th>
-    <th>選択肢B</th>
-    <th>フェス結果</th>
-    <th>作成日時</th>
-    <th>更新日時</th>
-    <th>詳細</th>
-    <th>編集</th>
-    </tr>
+<!-- フェス検索エリア -->
+<div class="section" >
+  <div class="section-title">フェス一覧</div>
+  <%= render 'search_condition'%>
+  <div class="row" >
     <% if @fests.present? %>
       <% @fests.each do |fest| %>
-        <tr>
-          <td><%= fest.fest_name %></td>
-          <td><%= Fest::FEST_STATUS.key(fest.fest_status) %></td>
-          <td><%= fest.selection_a %></td>
-          <td><%= fest.selection_b %></td>
-          <td><%= fest.fest_result %></td>
-          <td><%= fest.created_at %></td>
-          <td><%= fest.updated_at %></td>
-          <td><%= link_to 'Show', fest %></td>
-          <td><%= link_to 'Edit', edit_fest_path(fest) if fest.user == @current_user%></td>
-        </tr>
+        <%= render 'layouts/components/fest_card', fest: fest %>
       <% end %>
     <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Fest', new_fest_path %>
-
-
-<div>
-  <%= link_to '戦績を記録する！', edit_fest_vote_path(id: @current_user.fest_votes.first.id) %>
-  
+  </div>
+  <div class="row">
+    <%= link_to 'フェスを作成する', new_fest_path, {class: "waves-effect waves-light btn-large"} %>
+  </div>
 </div>

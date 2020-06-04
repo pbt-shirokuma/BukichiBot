@@ -4,7 +4,7 @@ class SessionController < ApplicationController
   # get /
   def new
     session[:user_id] = nil
-    @user = User.new()
+    @last_login_user = User.find_by(account_token: cookies[:account_token])
   end
 
   # post /login
@@ -14,14 +14,12 @@ class SessionController < ApplicationController
       # トークンがあればユーザー持ってくる
       user = User.find_by(name: params[:name], account_token: account_token )
       unless user.present?
-        flash[:errors] = "no data found"
-        render "new" and return 
+        render :new, notice: "ユーザーが見つかりませんでした" and return 
       end
     else
       # トークンがなければ、ユーザーを作る
-      account_token = User.new_account_token
-      user = User.create(name: params[:name], account_token: account_token).reload
-      cookies.permanent[:account_token] = account_token
+      user = User.create(name: params[:name])
+      cookies.permanent[:account_token] = user.account_token
     end
     session[:user_id] = user.id
     redirect_to controller: 'fests', action: 'index'

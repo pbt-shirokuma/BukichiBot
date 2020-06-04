@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col s6">
+    <label><%= fest.selection_a %>チーム</label>
+    <div>
+      <% a_team_users = fest.fest_votes.select{ |fv| fv.selection == "a" } %>
+      <% if a_team_users.blank? %>
+        まだ投票がありません！
+      <% else %>
+        <ul class="collection with-header">
+          <% a_team_users.each do |fv| %>
+            <li class="collection-item"><%= fv.user.name %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="col s6">
+    <label><%= fest.selection_b %>チーム</label>
+    <div>
+      <% b_team_users = fest.fest_votes.select{ |fv| fv.selection == "b" } %>
+      <% if b_team_users.blank? %>
+        まだ投票がありません！
+      <% else %>
+        <ul class="collection with-header">
+          <% b_team_users.each do |fv| %>
+            <li class="collection-item"><%= fv.user.name %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+</div>

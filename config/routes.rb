@@ -18,11 +18,14 @@ Rails.application.routes.draw do
   patch '/fests' => 'fests#create'
   post '/fests/:id' => 'fests#update'
   patch '/fests/:id' => 'fests#update'
-  post '/fests/:id/totalize' => 'fests#totalize'
+  delete '/fests/:id' => 'fests#destroy'
+  post '/fests/:id/open' => 'fests#open', as: 'fest_open'
+  post '/fests/:id/totalize' => 'fests#totalize', as: 'fest_totalize'
+
   
   # fest_vote
-  post '/fests/:id/fest_vote' => 'fest_votes#create', as: "create_fest_vote"
+  post '/fests/:fest_id/fest_votes' => 'fest_votes#create', as: "create_fest_vote"
   get '/fest_votes/:id/edit' => 'fest_votes#edit', as: "edit_fest_vote"
-  post '/fest_votes/:id' => 'fest_votes#update', as: "update_fest_vote"
+  patch '/fest_votes/:id' => 'fest_votes#update', as: "update_fest_vote"
   
 end

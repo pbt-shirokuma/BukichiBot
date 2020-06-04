@@ -1,29 +1,36 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>LineChatbot</title>
+    <title>Fesquid</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
+    <!-- normalize.cssの読込 -->
+    <%= stylesheet_link_tag    'normalize' %>
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
   </head>
 
   <body>
-    <div><%= button_to "logout", {controller: 'session', action: 'destroy'}, {method: :post} if session[:user_id].present? %></div>
-    <%= yield %>
+    
+    <%= render 'layouts/common_header' %>
+    
+    <%= render 'layouts/notice', notice: notice %>
+    
+    <div class="container body-main">
+      <%= yield %>
+    </div>
     
     <% if Rails.env == 'development' %>
-    <div style="border: solid 1px #333; font-size: 10px; font-color: #333" >
-      <table>
-        <tr><th column="2">cookies:</th></tr>
-        <tr><td>account_token:</td><td><%= cookies[:account_token] %></td></tr>
-        <tr><th column="2">session:</th></tr>
-        <tr><td>user_id:</td><td><%= session[:user_id] %></td></tr>
-        <tr><th column="2">flash:</th></tr>
-        <tr><td>message:</td><td><%= flash[:message] %></td></tr>
-      </table>
-    </div>
+      <div style="border: solid 1px #333; font-size: 10px; font-color: #333" >
+        <table>
+          <tr><th column="2">cookies:</th></tr>
+          <tr><td>account_token:</td><td><%= cookies[:account_token] %></td></tr>
+          <tr><th column="2">session:</th></tr>
+          <tr><td>user_id:</td><td><%= session[:user_id] %></td></tr>
+          <tr><th column="2">flash:</th></tr>
+          <tr><td>message:</td><td><%= flash[:message] %></td></tr>
+        </table>
+      </div>
     <% end %>
   </body>
 </html>

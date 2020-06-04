@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_21_142310) do
+ActiveRecord::Schema.define(version: 2020_06_02_090314) do
 
   create_table "fest_votes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "fest_id", null: false
@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 2019_09_21_142310) do
     t.string "selection", null: false
     t.integer "game_count", default: 0
     t.integer "win_count", default: 0
-    t.decimal "win_rate", precision: 5, scale: 2
+    t.decimal "win_rate", precision: 5, scale: 2, default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["fest_id", "user_id", "created_at"], name: "index_fest_votes_on_fest_id_and_user_id_and_created_at"
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 2019_09_21_142310) do
 
   create_table "fests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "fest_name", null: false
-    t.string "fest_status", default: "00"
+    t.integer "fest_status", default: 0, null: false
     t.string "fest_image"
     t.string "selection_a", null: false
     t.string "selection_b", null: false

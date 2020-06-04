@@ -1,21 +1,46 @@
-<p id="notice"><%= notice %></p>
+<div class="section" >
+  <div class="no-border-box">
+    <%= link_to '<< 一覧に戻る', fests_path  %>
+  </div>
 
-<p><%= @fest.fest_name %></p>
-<p><%= Fest::FEST_STATUS.key(@fest.fest_status) %></p>
-
-<table>
-    <tr><th>選択肢A</th><th>選択肢B</th></tr>
-    <tr><td><%= @fest.selection_a %></td><td><%= @fest.selection_b %></td></tr>
-    <% if @fest.fest_result.present? %>
-    <tr><td><%= @fest.fest_result = "a" ? "WIN!" : "LOSE..." %></td><td><%= @fest.fest_result = "b" ? "WIN!" : "LOSE..."%></td></tr>
-    <% elsif !@current_user.joined_active_fest? && @fest.fest_status == Fest::FEST_STATUS[:open] %>
-    <tr>
-        <td><%= button_to "投票する！", create_fest_vote_path(id: @fest.id), method: :post, params: { selection: "a" } %></td>
-        <td><%= button_to "投票する！", create_fest_vote_path(id: @fest.id), method: :post, params: { selection: "b" } %></td>
-    </tr>
+  <div class="section-title"><%= @fest.fest_name %></div>
+  
+  <div class="row center">
+    <div class="input-field col s12">
+      <%= image_tag @fest.fest_image_file || 'no_image.png', class: "responsive-img" %>
+    </div>
+  
+    <% button_disable = @fest.fest_status != "open" || @current_user.joined_active_fest.present? %>
+    <div class="col s6">
+      <%= button_to "#{@fest.selection_a}に投票する！" ,
+        create_fest_vote_path(fest_id: @fest.id), 
+        method: :post, params: {selection: 'a'},
+        data: { confirm: "#{@fest.selection_a}に投票します。あとで変更できません。よろしいですか？"},
+        disabled: button_disable, 
+        class: "btn-large" %>
+    </div>
+    <div class="col s6">
+      <%= button_to "#{@fest.selection_b}に投票する！" , 
+        create_fest_vote_path(fest_id: @fest.id) , 
+        method: :post, params: {selection: 'b'}, 
+        data: { confirm: "#{@fest.selection_b}に投票します。あとで変更できません。よろしいですか？"},
+        disabled: button_disable,
+        class: "btn-large" %>
+    </div>
+    
+    <% if current_fest_vote = @fest.fest_votes.find { |fv| fv.user_id == @current_user.id } %>
+      <div>
+        <span class="large-text"><%= current_fest_vote.selection_name %></span>に投票済み！
+      </div>
     <% end %>
-</table>
-
-<%= link_to 'Edit', edit_fest_path(@fest) %> |
-<%= link_to 'Back', fests_path %>
-<%= button_to '集計', :action => 'totalize' , :method => 'post' , :params => { id: @fest.id } if @fest.user == @current_user %>
+  
+    <% if @fest.fest_status == "close" %>
+    <div>
+      <label>結果</label>
+      <%= @fest.fest_result_display %>
+    </div>
+    <% end %>
+  </div>
+  
+  <%= render 'joined_users', fest: @fest %>
+</div>

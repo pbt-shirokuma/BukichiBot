@@ -1,0 +1,20 @@
+<% if notice.present? %>
+  <div id="message-area">
+    <% notices = notice.kind_of?(Array) ? notice : [ notice ] %>
+    <div class="row">
+      <ul class="col s10">
+        <% notices.each do |notice| %>
+          <li><%= notice %></li>
+        <% end %>
+      </ul>
+      <div class="col s2">
+        <label id="close-message-area" class="right" onclick="close_message_area();">X close</label>
+      </div>
+    </div>
+  </div>
+  <script>
+    function close_message_area(){
+      document.getElementById("message-area").style.display ="none";
+    }
+  </script>
+<% end %>

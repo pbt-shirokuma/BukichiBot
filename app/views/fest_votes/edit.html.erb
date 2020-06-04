@@ -1,8 +1,45 @@
-<%= @fest_vote.fest.fest_name %><br />
-投票：<%= @fest_vote.selection %><br />
-試合数：<%= @fest_vote.game_count %><br />
-勝ち数：<%= @fest_vote.win_count %><br />
-勝率：<%= (@fest_vote.win_rate * 100.0 ).to_s + "%" %><br />
-
-<%= button_to 'かち!' , update_fest_vote_path(id: @fest_vote.id) , method: :post, params: {result: 'win'} %>
-<%= button_to 'まけ!' , update_fest_vote_path(id: @fest_vote.id) , method: :post, params: {result: 'lose'} %>
+<div class="section" >
+  <div class="no-border-box">
+    <%= link_to '<< 一覧に戻る', fests_path  %>
+  </div>
+  
+  <div class="section-title"><%= @fest_vote.fest.fest_name %></div>
+  
+  <div class="center">
+    <span>
+      あなたの参加チームは
+      <span class="large-text"><%= @fest_vote.selection_name %></span>
+      です
+    </span>
+    <div class="row">
+      <div class="col s6"><%= button_to 'かち!' , update_fest_vote_path(id: @fest_vote.id) , method: :patch, params: {result: 'win'}, class: "btn-large" %></div>
+      <div class="col s6"><%= button_to 'まけ!' , update_fest_vote_path(id: @fest_vote.id) , method: :patch, params: {result: 'lose'}, class: "btn-large" %></div>
+    </div>
+  </div>
+  
+  <div>
+    <%= form_with model: @fest_vote, url: update_fest_vote_path(id: @fest_vote.id), method: :patch, local: true do |form| %>
+      <div class="row">
+        <div class="col s4">
+          <label>勝ち数</label>
+          <%= form.number_field :win_count %>
+        </div>
+        <div class="col s1">
+          <div><label>　</label></div>
+          <span class="large-text">/</span>
+        </div>
+        <div class="col s4">
+          <label>試合数</label>
+          <%= form.number_field :game_count %>
+        </div>
+        <div class="col s3">
+          <div><label>勝率</label></div>
+          <span class="large-text"> = <%= @fest_vote.win_rate * 100.0 %> %</span>
+        </div>
+      </div>
+      <div>
+        <%= form.submit "修正する" , class: "btn" %>
+      </div>
+    <% end %>
+  </div>
+</div>

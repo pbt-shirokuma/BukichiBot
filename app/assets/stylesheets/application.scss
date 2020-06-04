@@ -11,5 +11,21 @@
  * It is generally better to create a new file per style scope.
  *
  *= require_tree .
+ *= require material_icons
  *= require_self
  */
+ 
+@import "materialize/components/color-variables";
+$primary-color: color("green", "lighten-1") !default;
+$secondary-color: color("pink", "lighten-1") !default;
+
+$card-padding: 5px !default;
+
+@import 'materialize';
+
+@font-face {
+  font-family: "yasasisa";
+  src: asset_url('yasashisa.ttf') format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}

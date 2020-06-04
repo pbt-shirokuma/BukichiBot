@@ -1,26 +1,62 @@
-<%= form_with(model: fest, local: true) do |form| %>
-  <% if fest.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(fest.errors.count, "error") %> prohibited this fest from being saved:</h2>
+<script>
+  $(document).ready(function(){
+    $('select').formSelect();
+  });
+</script>
 
-      <ul>
-      <% fest.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+<div>
+  <%= form_with(model: fest, local: true) do |form| %>
+    <% disabled = fest.fest_status != "not_open" %>
+    
+    <div class="row">
+      <div class="input-field col s12">
+        <label>フェス名</label>
+        <%= form.text_field :fest_name, disabled: disabled %>
+      </div>
+      <div class="input-field col s6">
+        <label>選択肢A</label>
+        <%= form.text_field :selection_a, disabled: disabled %>
+      </div>
+      <div class="input-field col s6">
+        <label>選択肢B</label>
+        <%= form.text_field :selection_b, disabled: disabled %>
+      </div>
+      <div class="col s6">
+        <label>フェスイメージ</label>
+        <%= image_tag fest.fest_image_file || 'no_image.png', class: "responsive-img" %>
+      </div>
+      <div class="input-field col s6">
+        <%= form.file_field :fest_image_file, disabled: disabled %>
+      </div>
+    </div>
+    <% unless fest.new_record? %>
+      <div class="row">
+        <div class="col s6">
+          <label>フェスステータス</label>
+          <p><%= fest.fest_status_i18n %></p>
+        </div>
+        <div class="col s6">
+          <label>フェス結果</label>
+          <p><%= fest&.fest_result_display %></p>
+        </div>
+        <div class="col s6">
+          <label>作成日時</label>
+          <%= I18n.l(fest.created_at) if fest.created_at.present? %>
+        </div>
+        <div class="col s6">
+          <label>更新日時</label>
+          <%= I18n.l(fest.updated_at) if fest.updated_at.present? %>
+        </div>
+      </div>
+    <% end %>
+    
+    <div class="actions">
+      <% if fest.fest_status == "not_open" %>
+        <%= form.submit "登録", class: "btn-large" %>
       <% end %>
-      </ul>
+      <% unless fest.new_record? %>
+        <%= link_to "削除" , fest_path(id: fest.id) , method: :delete, params: {result: 'win'}, data: { confirm: "フェスを削除します。よろしいですか？" }, class: "btn-large" %>
+      <% end %>
     </div>
   <% end %>
-  
-  <table>
-    <tr><th>フェス名</th><td><%= form.text_field :fest_name %></td></tr>
-    <tr><th>フェスステータス</th><td><%= form.select :fest_status , Fest::FEST_STATUS %></td></tr>
-    <tr><th>選択肢A</th><td><%= form.text_field :selection_a %></td></tr>
-    <tr><th>選択肢B</th><td><%= form.text_field :selection_b %></td></tr>
-    <tr><th>フェス結果</th><td><%= form.text_field :fest_result %></td></tr>
-    <tr><th>作成日時</th><td><%= @fest.created_at %></td></tr>
-    <tr><th>更新日時</th><td><%= @fest.updated_at %></td></tr>
-  </table>
-  <div class="actions">
-    <%= form.submit %>
-  </div>
-<% end %>
+</div>
