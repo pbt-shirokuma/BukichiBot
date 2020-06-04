@@ -21,6 +21,10 @@
 #  index_fests_on_created_at  (created_at)
 #  index_fests_on_user_id     (user_id)
 #
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => users.id)
+#
 require 'digest'
 class Fest < ApplicationRecord
     

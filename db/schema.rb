@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_02_090314) do
+ActiveRecord::Schema.define(version: 2019_09_21_142033) do
 
   create_table "fest_votes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "fest_id", null: false
@@ -33,12 +33,12 @@ ActiveRecord::Schema.define(version: 2020_06_02_090314) do
     t.string "selection_a", null: false
     t.string "selection_b", null: false
     t.string "fest_result"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.text "description"
     t.datetime "term_from"
     t.datetime "term_to"
     t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_fests_on_created_at"
     t.index ["user_id"], name: "index_fests_on_user_id"
   end
@@ -66,4 +66,5 @@ ActiveRecord::Schema.define(version: 2020_06_02_090314) do
     t.index ["created_at"], name: "index_users_on_created_at"
   end
 
+  add_foreign_key "fests", "users"
 end
