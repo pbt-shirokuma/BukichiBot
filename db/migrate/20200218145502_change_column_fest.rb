@@ -1,6 +1,6 @@
 class ChangeColumnFest < ActiveRecord::Migration[5.2]
   def up
-    change_column :fests, :fest_status, :integer, null: false, default: 0
+    change_column :fests, :fest_status, 'integer USING CAST(column_name AS integer)', null: false, default: 0
   end
   
   def down
