@@ -11,8 +11,10 @@
   </head>
 
   <body>
-    
-    <%= render 'layouts/common_header' %>
+
+    <% unless request.path.eql?("/") %>
+      <%= render 'layouts/common_header' %>
+    <% end %>
     
     <%= render 'layouts/notice', notice: notice %>
     

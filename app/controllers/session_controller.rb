@@ -4,7 +4,7 @@ class SessionController < ApplicationController
   # get /
   def new
     session[:user_id] = nil
-    @last_login_user = User.find_by(account_token: cookies[:account_token])
+    @last_login_user = User.find_by(account_token: cookies[:account_token]) if cookies[:account_token].present?
   end
 
   # post /login

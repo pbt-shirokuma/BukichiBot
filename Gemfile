@@ -20,6 +20,7 @@ gem 'sass-rails'
 gem 'jquery-rails'
 gem 'enum_help'
 gem 'sassc', '~>2.1.0'
+gem 'font-awesome-rails'
 
 group :test do
   gem 'rspec-rails' , "3.8.2"

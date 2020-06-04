@@ -105,6 +105,12 @@ class Fest < ApplicationRecord
     @fest_image_file = file_stream
   end
   
+  def fest_result_detail
+    win_rate_a = fest_votes.where(selection: 'a').average(:win_rate).to_f.round(3) * 100
+    win_rate_b = fest_votes.where(selection: 'b').average(:win_rate).to_f.round(3) * 100
+    { win_rate_a: win_rate_a, win_rate_b: win_rate_b }
+  end
+  
   private
   
   def fest_image_upload

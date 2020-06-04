@@ -2,7 +2,7 @@
 <% joined_active_fest = @current_user.joined_active_fest %>
 <% if joined_active_fest.present? %>
   <div class="section" >
-    <div class="section-title">参加中のフェス</div>
+    <div class="section-title"><i class="fa fa-heart" aria-hidden="true"></i>参加中のフェス</div>
     <div class="row" >
       <%= render 'layouts/components/fest_card', fest: joined_active_fest %>
     </div>
@@ -14,7 +14,7 @@
 
 <!-- フェス検索エリア -->
 <div class="section" >
-  <div class="section-title">フェス一覧</div>
+  <div class="section-title"><i class="fa fa-gamepad" aria-hidden="true"></i>フェス一覧</div>
   <%= render 'search_condition'%>
   <div class="row" >
     <% if @fests.present? %>

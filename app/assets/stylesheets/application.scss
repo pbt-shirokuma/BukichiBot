@@ -15,6 +15,7 @@
  *= require_self
  */
  
+@import "font-awesome";
 @import "materialize/components/color-variables";
 $primary-color: color("green", "lighten-1") !default;
 $secondary-color: color("pink", "lighten-1") !default;
