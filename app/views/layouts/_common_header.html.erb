@@ -1,7 +1,9 @@
 <nav>
   <div class="nav-wrapper">
     <%= link_to fests_path, class: "brand-logo center" do |link|%>
-      <span class="logo-text">Fesquid</span>
+      <div class="header-logo-box center">
+        <%= image_tag 'application-logo.png', class: "responsive-img" %>
+      </div>
     <% end %>
     <% if session[:user_id].present? %>
       <ul id="nav-mobile" class="right ">

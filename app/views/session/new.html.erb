@@ -1,7 +1,7 @@
 <div class="sign-in-area">
   <div class="section">
-    <div>
-      <%= image_tag 'Fesquid.png', class: "responsive-img center" %>
+    <div class="logo-box">
+      <%= image_tag 'application-logo.png', class: "responsive-img" %>
     </div>
     <%= form_with(url: create_session_path, local: true) do |form| %>
       <div class="box-margin">

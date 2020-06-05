@@ -42,119 +42,16 @@ div.no-border-box{
   margin: 5px;
 }
 
-/* PC */
-@media (min-width: 750px){
-  /* ログイン表示欄 */
-  div.sign-in-area {
-    height: 600px;
-    width: 400px;
-    margin: 50px auto 30px auto;
-  }
-  
-  .description {
-    font-weight: normal;
-    font-size: 0.8rem;
-    color: #666;
-    li {
-      list-style-type: square !important;
-      margin: 5px 8px 5px 8px;
-    }
-  }
-  
-  /* セクション */
-  div.section {
-    background: #fff;
-    margin: 20px 5px 20px 5px;
-    padding: 10px 20px 10px 20px;
-  }
-  
-  div.section-title {
-    font-family: "yasashisa";
-    font-weight: 800;
-    font-size: 1.8rem;
-    margin-bottom: 30px;
-  }
-  
-  /* カード表示 */
-  div.card {
-    margin: 5px;
-    min-width: 280px;
-  }
-  
-  span.card-title {
-    font-family: "yasashisa" !important;
-    font-weight: bold !important;
-    font-size: 1.3rem !important;
-    background-color:rgba(255,255,255,0.4);
-    color: black !important;
-    border-radius: 10px
-  }
-  
-  label.fest-status {
-    padding: 8px;
-    font-size: 1.2rem;
-    font-weight: normal;
-    color: black;
-    box-shadow: 3px 2px rgba(0,0,0,0.4);
-  }
-  
-  label.not_open {
-    background-color: #ffc;
-  }
-  
-  label.open {
-    background-color: #acf;
-  }
-  
-  label.close {
-    background-color: #ccc;
-  }
-  
-  label.fest-result {
-    padding: 8px;
-    font-size: 1.2rem;
-    font-weight: normal;
-    color: black;
-  }
-  
-  /* テキスト関連 */
-  label.minimum-text {
-    color: #ccc;
-    font-size: 0.5rem;
-    margin: 2px;
-  }
-  
-  .large-text {
-    font-size: 1.5rem;
-    margin-left: 3px;
-    margin-right: 3px;
-  }
-  
-  /* チェックボックス */
-  label.checkbox-label{
-    font-weight: normal;
-    color: black;
-    margin-right: 15px;
-  }
-  
-  /* フェス結果表示 */
-  table.result_gauge{
-    tr{
-      border: none 0px #fff;
-    }
-  }
-  td.result_gauge_a{
-    border-radius: 20px 0px 0px 20px;
-    background-color: #AFA;
-    text-align: left;
-    padding-left: 30px;
-  }
-  td.result_gauge_b{
-    border-radius: 0px 20px 20px 0px;
-    background-color: #FAA;
-    text-align: right;
-    padding-right: 30px;
-  }
+.logo-box {
+  margin: 50px 50px 50px 50px;
+}
+
+.header-logo-box {
+  margin: auto auto;
+  padding: 0px 30px;
+  width: 60%;
+  height: 60%;
+  background-color: white;
 }
 
 /* スマホ */
@@ -273,6 +170,121 @@ div.no-border-box{
     font-weight: normal;
     color: black;
     margin-right: 8px;
+  }
+  
+  /* フェス結果表示 */
+  table.result_gauge{
+    tr{
+      border: none 0px #fff;
+    }
+  }
+  td.result_gauge_a{
+    border-radius: 20px 0px 0px 20px;
+    background-color: #AFA;
+    text-align: left;
+    padding-left: 30px;
+  }
+  td.result_gauge_b{
+    border-radius: 0px 20px 20px 0px;
+    background-color: #FAA;
+    text-align: right;
+    padding-right: 30px;
+  }
+}
+
+/* PC */
+@media (min-width: 750px){
+  /* ログイン表示欄 */
+  div.sign-in-area {
+    height: 600px;
+    width: 400px;
+    margin: 50px auto 30px auto;
+  }
+  
+  .description {
+    font-weight: normal;
+    font-size: 0.8rem;
+    color: #666;
+    li {
+      list-style-type: square !important;
+      margin: 5px 8px 5px 8px;
+    }
+  }
+  
+  /* セクション */
+  div.section {
+    background: #fff;
+    margin: 20px 5px 20px 5px;
+    padding: 10px 20px 10px 20px;
+  }
+  
+  div.section-title {
+    font-family: "yasashisa";
+    font-weight: 800;
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+  }
+  
+  /* カード表示 */
+  div.card {
+    margin: 5px;
+    min-width: 280px;
+  }
+  
+  span.card-title {
+    font-family: "yasashisa" !important;
+    font-weight: bold !important;
+    font-size: 1.3rem !important;
+    background-color:rgba(255,255,255,0.4);
+    color: black !important;
+    border-radius: 10px
+  }
+  
+  label.fest-status {
+    padding: 8px;
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: black;
+    box-shadow: 3px 2px rgba(0,0,0,0.4);
+  }
+  
+  label.not_open {
+    background-color: #ffc;
+  }
+  
+  label.open {
+    background-color: #acf;
+  }
+  
+  label.close {
+    background-color: #ccc;
+  }
+  
+  label.fest-result {
+    padding: 8px;
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: black;
+  }
+  
+  /* テキスト関連 */
+  label.minimum-text {
+    color: #ccc;
+    font-size: 0.5rem;
+    margin: 2px;
+  }
+  
+  .large-text {
+    font-size: 1.5rem;
+    margin-left: 3px;
+    margin-right: 3px;
+  }
+  
+  /* チェックボックス */
+  label.checkbox-label{
+    font-weight: normal;
+    color: black;
+    margin-right: 15px;
   }
   
   /* フェス結果表示 */
