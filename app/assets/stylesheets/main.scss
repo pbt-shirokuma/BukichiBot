@@ -1,36 +1,36 @@
+/* 共通設定 */
 body {
   background-color: #333;
   font-family: "yasashisa";
   font-weight: bold;
 }
 
-div.section-title {
-  font-family: "yasashisa";
-  font-weight: 800;
-  font-size: 1.8rem;
-  margin-bottom: 30px;
+/* メッセージ部 */
+div#message-area{
+  background-color: #eec;
 }
 
-span.card-title {
-  font-family: "yasashisa" !important;
-  font-weight: bold !important;
-  font-size: 1.3rem !important;
-  background-color:rgba(255,255,255,0.4);
-  color: black !important;
-  border-radius: 10px
+/* アイコン */
+i {
+  margin-right: 10px;
 }
 
-div.sign-in-area {
-  height: 600px;
-  width: 400px;
-  margin: 50px auto 30px auto;
+/* ボタン */
+.btn{
+  margin-top: 5px;
 }
 
+input[type="submit"]{
+  color: #FFFFFF;
+}
+
+/* リンク */
 a {
   margin-right: 5px;
   margin-left: 5px;
 }
 
+/* 表示余白 */
 div.no-border-box{
   margin-bottom: 10px;
   margin-left: 5px;
@@ -38,115 +38,259 @@ div.no-border-box{
   margin-top: 10px;
 }
 
-input[type="submit"]{
-  color: #FFFFFF;
-}
-
-div#message-area{
-  background-color: #eec;
-}
-
-div.section {
-  background: #fff;
-  margin: 20px 5px 20px 5px;
-  padding: 10px 20px 10px 20px;
-}
-
-div.card {
-  margin: 5px;
-  min-width: 280px;
-}
-
-label.minimum-text {
-  color: #ccc;
-  font-size: 0.5rem;
-  margin: 2px;
-}
-
-label.fest-status {
-  padding: 8px;
-  font-size: 1.2rem;
-  font-weight: normal;
-  color: black;
-  box-shadow: 3px 2px rgba(0,0,0,0.4);
-}
-label.not_open{
-  background-color: #ffc;
-}
-label.open{
-  background-color: #acf;
-}
-label.close{
-  background-color: #ccc;
-}
-
-label.fest-status-open {
-  background-color: #669;
-  font-size: 1.0rem;
-  color: black;
-}
-
-label.fest-status-open {
-  background-color: #669;
-  font-size: 1.0rem;
-  color: black;
-}
-
-label.fest-result {
-  padding: 8px;
-  font-size: 1.2rem;
-  font-weight: normal;
-  color: black;
-}
-
-.btn{
-  margin-top: 5px;
-}
-
-label.checkbox-label{
-  font-weight: normal;
-  color: black;
-  margin-right: 15px;
-}
-
 .box-margin {
   margin: 5px;
 }
 
-.large-text {
-  font-size: 1.5rem;
-  margin-left: 3px;
-  margin-right: 3px;
-}
-
-.description {
-  font-weight: normal;
-  font-size: 0.8rem;
-  color: #666;
-  li {
-    list-style-type: square !important;
-    margin: 5px 8px 5px 8px;
+/* PC */
+@media (min-width: 750px){
+  /* ログイン表示欄 */
+  div.sign-in-area {
+    height: 600px;
+    width: 400px;
+    margin: 50px auto 30px auto;
+  }
+  
+  .description {
+    font-weight: normal;
+    font-size: 0.8rem;
+    color: #666;
+    li {
+      list-style-type: square !important;
+      margin: 5px 8px 5px 8px;
+    }
+  }
+  
+  /* セクション */
+  div.section {
+    background: #fff;
+    margin: 20px 5px 20px 5px;
+    padding: 10px 20px 10px 20px;
+  }
+  
+  div.section-title {
+    font-family: "yasashisa";
+    font-weight: 800;
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+  }
+  
+  /* カード表示 */
+  div.card {
+    margin: 5px;
+    min-width: 280px;
+  }
+  
+  span.card-title {
+    font-family: "yasashisa" !important;
+    font-weight: bold !important;
+    font-size: 1.3rem !important;
+    background-color:rgba(255,255,255,0.4);
+    color: black !important;
+    border-radius: 10px
+  }
+  
+  label.fest-status {
+    padding: 8px;
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: black;
+    box-shadow: 3px 2px rgba(0,0,0,0.4);
+  }
+  
+  label.not_open {
+    background-color: #ffc;
+  }
+  
+  label.open {
+    background-color: #acf;
+  }
+  
+  label.close {
+    background-color: #ccc;
+  }
+  
+  label.fest-result {
+    padding: 8px;
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: black;
+  }
+  
+  /* テキスト関連 */
+  label.minimum-text {
+    color: #ccc;
+    font-size: 0.5rem;
+    margin: 2px;
+  }
+  
+  .large-text {
+    font-size: 1.5rem;
+    margin-left: 3px;
+    margin-right: 3px;
+  }
+  
+  /* チェックボックス */
+  label.checkbox-label{
+    font-weight: normal;
+    color: black;
+    margin-right: 15px;
+  }
+  
+  /* フェス結果表示 */
+  table.result_gauge{
+    tr{
+      border: none 0px #fff;
+    }
+  }
+  td.result_gauge_a{
+    border-radius: 20px 0px 0px 20px;
+    background-color: #AFA;
+    text-align: left;
+    padding-left: 30px;
+  }
+  td.result_gauge_b{
+    border-radius: 0px 20px 20px 0px;
+    background-color: #FAA;
+    text-align: right;
+    padding-right: 30px;
   }
 }
 
-table.result_gauge{
-  tr{
-    border: none 0px #fff;
+/* スマホ */
+@media (min-width: 0px){
+  
+  body {
+    float: none !important;
+    font-size: 0.5rem !important;
   }
-}
-td.result_gauge_a{
-  border-radius: 20px 0px 0px 20px;
-  background-color: #AFA;
-  text-align: left;
-  padding-left: 30px;
-}
-td.result_gauge_b{
-  border-radius: 0px 20px 20px 0px;
-  background-color: #FAA;
-  text-align: right;
-  padding-right: 30px;
-}
-
-i{
-  margin-right: 10px;
+  
+  .row{
+    margin-bottom: 5px !important;
+  }
+  
+  .s-listable{
+    width: 90%;
+  }
+  
+  .btn-vote {
+    line-height: 1.0rem !important;
+    font-size: 0.8rem !important;
+    padding: 0px 5px !important;
+    text-align: center;
+    .fa-paper-plane{
+      font-size: 0.5rem;
+    }
+  }
+  
+  /* ログイン表示欄 */
+  div.sign-in-area {
+    height: 80%;
+    width: 80%;
+    margin: 50px auto 30px auto;
+  }
+  
+  .description {
+    font-weight: normal;
+    font-size: 0.8rem;
+    color: #666;
+    li {
+      list-style-type: square !important;
+      margin: 5px 8px 5px 8px;
+    }
+  }
+  
+  /* セクション */
+  div.section {
+    background: #fff;
+    margin: 20px 5px 20px 5px;
+    padding: 10px 20px 10px 20px;
+  }
+  
+  div.section-title {
+    font-family: "yasashisa";
+    font-weight: 800;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+  
+  /* カード表示 */
+  div.card {
+    margin: 2px;
+  }
+  
+  span.card-title {
+    font-family: "yasashisa" !important;
+    font-weight: bold !important;
+    font-size: 1.0rem !important;
+    background-color:rgba(255,255,255,0.4);
+    color: black !important;
+    border-radius: 10px
+  }
+  
+  label.fest-status {
+    padding: 3px;
+    font-size: 0.8rem;
+    font-weight: normal;
+    color: black;
+    box-shadow: 3px 2px rgba(0,0,0,0.4);
+  }
+  
+  label.not_open {
+    background-color: #ffc;
+  }
+  
+  label.open {
+    background-color: #acf;
+  }
+  
+  label.close {
+    background-color: #ccc;
+  }
+  
+  label.fest-result {
+    padding: 8px;
+    font-size: 0.8rem;
+    font-weight: normal;
+    color: black;
+  }
+  
+  /* テキスト関連 */
+  label.minimum-text {
+    color: #ccc;
+    font-size: 0.5rem;
+    margin: 2px;
+  }
+  
+  .large-text {
+    font-size: 1.0rem;
+    margin-left: 3px;
+    margin-right: 3px;
+  }
+  
+  /* チェックボックス */
+  label.checkbox-label{
+    font-weight: normal;
+    color: black;
+    margin-right: 8px;
+  }
+  
+  /* フェス結果表示 */
+  table.result_gauge{
+    tr{
+      border: none 0px #fff;
+    }
+  }
+  td.result_gauge_a{
+    border-radius: 20px 0px 0px 20px;
+    background-color: #AFA;
+    text-align: left;
+    padding-left: 30px;
+  }
+  td.result_gauge_b{
+    border-radius: 0px 20px 20px 0px;
+    background-color: #FAA;
+    text-align: right;
+    padding-right: 30px;
+  }
 }

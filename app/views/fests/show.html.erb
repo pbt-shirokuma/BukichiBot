@@ -16,7 +16,7 @@
         method: :post, params: {selection: 'a'},
         data: { confirm: "#{@fest.selection_a}に投票します。あとで変更できません。よろしいですか？"},
         disabled: button_disable, 
-        class: "btn-large" do |b| %>
+        class: "btn-large btn-vote" do |b| %>
         <i class="fa fa-paper-plane" aria-hidden="true"></i><%= "#{@fest.selection_a}に投票する！" %>
       <% end%>
     </div>
@@ -25,7 +25,7 @@
         method: :post, params: {selection: 'b'}, 
         data: { confirm: "#{@fest.selection_b}に投票します。あとで変更できません。よろしいですか？"},
         disabled: button_disable,
-        class: "btn-large" do |b| %>
+        class: "btn-large btn-vote" do |b| %>
         <i class="fa fa-paper-plane" aria-hidden="true"></i><%= "#{@fest.selection_b}に投票する！" %>
       <% end %>
     </div>

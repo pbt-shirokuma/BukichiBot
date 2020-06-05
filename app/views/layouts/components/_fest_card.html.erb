@@ -6,11 +6,11 @@
     </div>
     <div class="card-stacked">
       <div class="card-content row">
-        <div class="col s4">
+        <div class="col s12 m4">
           <label class="fest-status <%= fest.fest_status %>" ><%= fest.fest_status_i18n %></label>
         </div>
         <% if fest.fest_status == "close" %>
-          <label class="fest-result col s8"><%= fest.fest_result_display %></label>
+          <label class="fest-result col s12 m8"><%= fest.fest_result_display %></label>
         <% end %>
       </div>
       <label class="minimum-text">last updated at <br /><%= I18n.l fest.updated_at %></label>
@@ -18,14 +18,14 @@
       <div class="card-action">
         <div class="row">
           <!-- 詳細の表示は共通で表示 -->
-          <div class="col s6"><%= link_to '詳細を見る', fest_path(fest), { class: "waves-effect waves-light btn" } %></div>
+          <div class="col s12 l6"><%= link_to '詳細を見る', fest_path(fest), { class: "waves-effect waves-light btn s-listable" } %></div>
           <!-- 企画者は開催ステータスの変更を可能 -->
           <% if fest.user == @current_user %>
-            <div class="col s6"><%= link_to '編集する', edit_fest_path(fest), { class: "waves-effect waves-light btn" } %></div>
+            <div class="col s12 l6"><%= link_to '編集する', edit_fest_path(fest), { class: "waves-effect waves-light btn s-listable" } %></div>
             <% if fest.fest_status == "not_open" %>
-              <div class="col s6"><%= link_to '開催する', fest_open_path(id: fest.id), method: :post, class: "waves-effect waves-light btn" %></div>
+              <div class="col s12 l6"><%= link_to '開催する', fest_open_path(id: fest.id), method: :post, class: "waves-effect waves-light btn s-listable" %></div>
             <% elsif fest.fest_status == "open" %>
-              <div class="col s6"><%= link_to '集計する', fest_totalize_path(id: fest.id), method: :post, class: "waves-effect waves-light btn" %></div>
+              <div class="col s12 l6"><%= link_to '集計する', fest_totalize_path(id: fest.id), method: :post, class: "waves-effect waves-light btn s-listable" %></div>
             <% end %>
           <% end %>
         </div>
