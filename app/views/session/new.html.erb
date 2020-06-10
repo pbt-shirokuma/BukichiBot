@@ -6,10 +6,11 @@
     <%= form_with(url: create_session_path, local: true) do |form| %>
       <div class="box-margin">
         <label>ユーザー名</label>
-        <%= form.text_field :name, value:  @last_login_user&.name %>
+        <%= form.text_field :name, value: @last_login_user&.name %>
       </div>
       <div class="actions center">
-        <%= form.submit "ログイン", class: "btn-large" %>
+        <% submit_button_label = @last_login_user.present? ? "ログイン" : "登録" %>
+        <%= form.submit submit_button_label, class: "btn-large" %>
       </div>
     <% end %>
     <div>
