@@ -194,8 +194,9 @@ class MessageController < ApplicationController
                     
                     # 開催中のフェス情報を取得
                     @fests = Fest.where(fest_status: "open").order(:updated_at ,"DESC").limit(10)
+                    @joined_active_fest = @sendUser.joined_active_fest
                     if @fests.exists?
-                        if @sendUser.status == User::STATUS[:fest]
+                        if @joined_active_fest.blank?
                         
                             # フェスに未投票の場合
                             @sendUser.talk_status = User::TALK_STATUS[:fest_vote]
@@ -210,25 +211,20 @@ class MessageController < ApplicationController
                             @fests.each do |fest|
                                 actions.push(set_postback_action_object(
                                     @fest.selection_a,
-                                    "step=1&fest_id="+fest.id.to_s,
-                                    festt.fest_name)
+                                    "step=1&fest_id=" + fest.id.to_s,
+                                    fest.fest_name)
                                 )
                             end
-                            actions.push(set_postback_action_object(
-                                @fest.selection_b,
-                                "step=1&fest_id="+@fest.id.to_s+"&selection=b",
-                                @fest.selection_b + "に投票する！")
-                            )
                             # TODO：その他の選択肢（Webから投票/続きの検索）を実装したらボタン追加
                                 
                         else
                             # フェス参加中の場合
                             # ユーザーのチームを返す
-                            fest_vote = FestVote.where("(fest_id = ?) OR (user_id = ?)", @fest.id,@sendUser.id).limit(1)[0]
+                            fest_vote = FestVote.where("(fest_id = ?) OR (user_id = ?)", @joined_active_fest.id, @sendUser.id).limit(1)[0]
                             if fest_vote.selection == "a" 
-                                user_selection = @fest.selection_a 
+                                user_selection = @joined_active_fest.selection_a 
                             else 
-                                user_selection = @fest.selection_b
+                                user_selection = @joined_active_fest.selection_b
                             end
                             messages.push({
                                 type: "text",
@@ -244,18 +240,19 @@ class MessageController < ApplicationController
                     end
                     
                 when "戦績を記録する！"
-
-                    if @sendUser.status == User::STATUS[:fest]
+                    
+                    @joined_active_fest = @sendUser.joined_active_fest
+                    if @joined_active_fest.present?
                         # 戦績の記録ステータスに変更する
                         @sendUser.talk_status = User::TALK_STATUS[:fest_record]
                         @sendUser.save!
                         
                         # フェス投票データを取得
-                        fest_vote = FestVote.includes(:fest).where(fests: {fest_status: Fest::FEST_STATUS[:open]}, fest_votes: {user_id: @sendUser.id}).first
+                        fest_vote = @sendUser.my_vote(joined_active_fest.id)
                         
                         actions = []
-                        actions.push(set_postback_action_object("Win!","step=1&fest_vote_id="+fest_vote.id.to_s+"&result=1","Win!"))
-                        actions.push(set_postback_action_object("Lose...","step=1&fest_vote_id="+fest_vote.id.to_s+"&result=2","Lose..."))
+                        actions.push(set_postback_action_object("Win!","step=1&fest_vote_id=#{fest_vote.id}&result=1","Win!"))
+                        actions.push(set_postback_action_object("Lose...","step=1&fest_vote_id=#{fest_vote.id}&result=2","Lose..."))
                         messages.push(
                             set_confirm_template(
                                 "試合結果の記録",
@@ -456,7 +453,6 @@ class MessageController < ApplicationController
                     text: "投票したでし！"
                 })
                 
-                @sendUser.status = User::STATUS[:fest]
                 @sendUser.talk_status = User::TALK_STATUS[:normal]
                 @sendUser.save!
 

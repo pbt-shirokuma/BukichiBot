@@ -50,7 +50,7 @@ class User < ApplicationRecord
   
   # フェスIDを渡して投票レコードを取得する
   def my_vote(fest_id)
-    self.fest_votes.find_by(fest_id: fest_id)
+    self.fest_votes.find(fest_id: fest_id)
   end
   
   def set_account_token
