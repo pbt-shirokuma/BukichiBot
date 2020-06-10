@@ -9,9 +9,23 @@
         <%= form.text_field :name, value:  @last_login_user&.name %>
       </div>
       <div class="actions center">
-        <%= form.submit "ログイン", class: "btn-large"%>
+        <%= form.submit "ログイン", class: "btn-large" %>
       </div>
     <% end %>
+    <div>
+      <div id="cant-login-section" class="box-margin">
+        <label class="display-toggle"><i class="fa fa-chevron-circle-right" aria-hidden="true"></i>ログインできない場合 </label>
+      </div>
+      <div id="cant-login-section-body" class="box-margin">
+        <div class="box-margin">
+          下記のボタンを押して当サイトのログイン履歴を削除し、再度ログインをお試しください。<br />
+          フェス参加中は履歴の削除を行うと、戦績が消えてしまいますのでご注意ください。
+        </div>
+        <div class="actions center">
+          <%= button_to "ログイン履歴の削除", reset_account_token_path, method: :patch,class: "btn" %>
+        </div>
+      </div>
+    </div>
     <hr />
     <div class="description">
       <ul>
@@ -31,3 +45,19 @@
     </div>
   </div>
 </div>
+
+<script>
+  //高さ指定
+  $('#cant-login-section-body').each(function(){
+      $(this).css("height",$(this).height()+"px");
+  });
+  //開閉要素を隠す
+  $('#cant-login-section-body').hide();
+  //ボタン要素が押されたら
+  $('.display-toggle').click(function () {
+  	//現在の状況に合わせて開閉
+      $('#cant-login-section-body').slideToggle('slow');
+      //現在の状況に合わせてクラスをつける
+      $(this).toggleClass('active');
+  });
+</script>

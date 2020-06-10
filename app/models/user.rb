@@ -22,6 +22,9 @@ class User < ApplicationRecord
   has_many :fest, dependent: :destroy
   has_many :fest_votes, dependent: :destroy
 
+  validates :name, presence: true
+
+
   before_create :set_account_token
 
   # status 定数

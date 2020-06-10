@@ -1,4 +1,5 @@
 class MessageController < ApplicationController
+    skip_before_action :require_sign_in!, on: [:callback]
     
     # 使用Gem
     require "line/bot"

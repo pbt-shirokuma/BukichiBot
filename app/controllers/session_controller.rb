@@ -14,12 +14,17 @@ class SessionController < ApplicationController
       # トークンがあればユーザー持ってくる
       user = User.find_by(name: params[:name], account_token: account_token )
       unless user.present?
-        render :new, notice: "ユーザーが見つかりませんでした" and return 
+        redirect_to new_session_path, notice: "ユーザーが見つかりませんでした" and return 
       end
     else
       # トークンがなければ、ユーザーを作る
-      user = User.create(name: params[:name])
-      cookies.permanent[:account_token] = user.account_token
+      user = User.new(name: params[:name])
+      if user.valid?
+        user.save
+        cookies.permanent[:account_token] = user.account_token
+      else
+        redirect_to new_session_path, notice: "ユーザー名を入力してください" and return 
+      end
     end
     session[:user_id] = user.id
     redirect_to controller: 'fests', action: 'index'
@@ -28,6 +33,12 @@ class SessionController < ApplicationController
   # post /logout
   def destroy
     session[:user_id] = nil
+    redirect_to action: 'new'
+  end
+  
+  # patch /reset_account_token
+  def reset_account_token
+    cookies[:account_token] = nil
     redirect_to action: 'new'
   end
 

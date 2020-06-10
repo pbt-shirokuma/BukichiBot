@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get '/' => 'session#new', as: "new_session"
   post '/login' => 'session#create', as: "create_session"
   post '/logout' => 'session#destroy', as: "destroy_session"
+  patch '/reset_account_token' => 'session#reset_account_token', as: "reset_account_token"
   
   # fest
   get '/fests' => 'fests#index', as: "fests"
@@ -21,7 +22,6 @@ Rails.application.routes.draw do
   delete '/fests/:id' => 'fests#destroy'
   post '/fests/:id/open' => 'fests#open', as: 'fest_open'
   post '/fests/:id/totalize' => 'fests#totalize', as: 'fest_totalize'
-
   
   # fest_vote
   post '/fests/:fest_id/fest_votes' => 'fest_votes#create', as: "create_fest_vote"
