@@ -12,7 +12,7 @@ gem 'aws-sdk-rails' , "2.1.0"
 gem 'aws-sdk-s3' , "1.45.0"
 gem 'line-bot-api' , "1.11.0"
 gem 'active_hash' , "2.2.1"
-gem 'json' , '2.1.0'
+gem 'json' , '2.3.0'
 gem 'uglifier' , "4.1.20"
 gem 'materialize-sass', '~> 1.0.0'
 gem 'material_icons', '~> 2.2.1'
