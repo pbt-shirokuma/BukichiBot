@@ -7,7 +7,7 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 gem "rails", "5.2.3"
 gem "bootsnap", "1.4.4" , require: false
 gem "listen" , "3.1.5"
-gem 'puma' , "4.0.0"
+gem 'puma' , "4.3.8"
 gem 'aws-sdk-rails' , "2.1.0"
 gem 'aws-sdk-s3' , "1.45.0"
 gem 'line-bot-api' , "1.11.0"
